@@ -300,7 +300,19 @@ Template: `templates/MEMORY_DECISION.md`
 ## VERSION
 ============================================================
 
-AI Engineering OS v0.2 — Agent Mesh
-Build: Brain (broker) → Agents (mesh) → Skills → Templates → Memory → Install
-Previous: v0.1 Foundation (linear pipeline)
-Current: v0.2 Agent Mesh (agent-to-agent communication)
+AI Engineering OS v0.3 — Rules Expansion
+Build: Brain (broker) → Agents (mesh) → Skills → Rules → Templates → Memory → Install
+Current: v0.3 (installed mode available — use setup.sh or .ai/ install)
+
+============================================================
+## INSTALL MODE
+============================================================
+
+This is the **development version** of AI Engineering OS — the source project.
+
+When installing into another project, copy all files into `.ai/` and
+symlink `.ai/CLAUDE.md` → `CLAUDE.md` in the project root.
+
+See `CLAUDE.install.md` for the installable version with `.ai/` paths.
+See `setup.sh` for one-command installation.
+See `INSTALL.md` for full instructions.

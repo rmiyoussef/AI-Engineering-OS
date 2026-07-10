@@ -126,8 +126,19 @@ Agents communicate with each other through the Brain using the **Message Protoco
 Memory lives **in the project**, not in AI Engineering OS. The OS provides the interface and schema; the project provides the storage.
 
 ```
-AI-Engineering-OS/brain/       # System brain (interface, schemas, rules)
-Project/memory/                # Project memory (decisions, architecture, business rules)
+AI-Engineering-OS/              # OS source project (development)
+├── CLAUDE.md                   # Development version (loads from ./)
+├── CLAUDE.install.md           # Installable version (loads from .ai/)
+├── brain/, agents/, skills/...
+└── setup.sh                    # One-command installer
+
+Your-Project/                   # Installed into any project
+├── CLAUDE.md → .ai/CLAUDE.md   # Symlink — the Brain entry point
+├── .ai/                        # All OS files live here
+│   └── CLAUDE.md               # Installable version with .ai/ paths
+├── brain/, agents/, skills/...
+└── memory/                     # YOUR project's memory
+    ├── decisions/architecture/lessons/sessions/business/
 ```
 
 ### Memory Interface
@@ -264,7 +275,7 @@ BRAIN responds to user with full summary
 | 5 | **Templates** | `templates/MEMORY_DECISION.md` | ✅ v0.1 |
 | 6 | **Memory** | OS memory interface (protocol defined in `brain/SYSTEM.md`) | ✅ v0.1 |
 | 7 | **Rules expansion** | `rules/COMMIT_MESSAGES.md`, `ERROR_HANDLING.md`, `NAMING_CONVENTIONS.md`, `SECURITY.md`, `DATABASE.md`, `API_DESIGN.md` | ✅ v0.3 |
-| 8 | **Install System** | Install scripts that bootstrap any repo | 🔲 Planned |
+| 8 | **Install System** | `setup.sh`, `CLAUDE.install.md`, `.ai/` convention, `INSTALL.md` | ✅ v0.3 |
 
 ---
 
@@ -309,7 +320,7 @@ BRAIN responds to user with full summary
 |---------|-------|----------|--------|
 | v0.1 | **Foundation** | Brain (CLAUDE.md, SYSTEM, MISSION, PRINCIPLES, LIMITATIONS, RULES), Workflow (STANDARD), Skills (CODE_REVIEW, TESTING, GIT, MEMORY), Agents (PLANNER, EXECUTOR, REVIEWER, MEMORY, GITHUB), Templates, architecture docs | ✅ **Done** |
 | v0.2 | **Agent Mesh** | Message broker protocol (R11-R16), agent-to-agent communication, BACKEND QA, TESTER, CLEAN CODE, ARCHIVIST agents, BRAIN as router not dispatcher | ✅ **Done** |
-| v0.3 | **Rules expansion** | `rules/COMMIT_MESSAGES.md`, `ERROR_HANDLING.md`, `NAMING_CONVENTIONS.md`, `SECURITY.md`, `DATABASE.md`, `API_DESIGN.md` — standalone domain-agnostic rule files | ✅ **Done** |
+| v0.3 | **Rules + Install** | Rules expansion (6 files) + Install system (setup.sh, CLAUDE.install.md, .ai/ convention) | ✅ **Done** |
 | v0.4 | **Skills expansion** | Framework skills (laravel, sql, redis, react, vue), language skills (php, js, python) | 🔲 Planned |
 | v0.5 | **Memory enhancements** | Memory querying, linking, lifecycle management | 🔲 Planned |
 | v0.6 | **GitHub release workflow** | Changelog, semantic versioning, release automation | 🔲 Planned |
