@@ -149,3 +149,55 @@ If a task introduces a new pattern, command, middleware, convention, or technolo
 The `memory/connections/` directory contains database schema and connection information. It must never be committed to Git. The `.gitignore` must include `memory/connections/`. The DATABASE agent must verify this before writing any connection file.
 
 **Violation:** R3 (Git Safety) is triggered. The commit is blocked.
+
+---
+
+## User Approval Rules
+
+### R21 — Always Ask Before Executing Commands or Writing Files
+Before running any shell command (`bash`, `cp`, `mv`, `rm`, `git`, `artisan`, `npm`, `composer`, `curl`, etc.) or writing any file, **you must present a full summary of what you're about to do and ask for explicit approval**.
+
+The approval request must include:
+1. **Plan Summary** — What you're trying to accomplish
+2. **Commands to Execute** — Every command, exactly as it will run
+3. **Files to Create/Modify** — Every file path and a summary of the change
+4. **Files to Delete** — Every file path that will be removed
+5. **Risks** — Any potential side effects (data loss, breaking changes, downtime)
+
+**Format:**
+
+```
+═══════════════════════════════════════════════
+  APPROVAL REQUIRED — Review before continuing
+═══════════════════════════════════════════════
+
+  Task: [one sentence]
+
+  Commands:
+    • [command 1]
+    • [command 2]
+
+  Files to create:
+    • [path] — [reason]
+
+  Files to modify:
+    • [path] — [summary of changes]
+
+  Files to delete:
+    • [path] — [reason]
+
+  Risks:
+    • [risk 1]
+    • [risk 2]
+
+  Ready to proceed? (yes/no)
+═══════════════════════════════════════════════
+```
+
+**Violation:** The BRAIN must not execute anything without explicit user approval. If you proceed without asking, you've violated the user's trust.
+
+### R22 — Read-Only Tasks Don't Need Approval
+Reading files, showing structure, answering questions, and other read-only operations do not require approval. Only mutations (commands, file writes, file deletes).
+
+### R23 — Repeat Approval If Context Changes
+If after receiving approval the plan changes significantly (different files, different commands), ask again. Don't assume blanket approval covers unexpected changes.

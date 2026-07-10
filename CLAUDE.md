@@ -76,6 +76,9 @@ They talk to each other. You facilitate. No commands needed.
 **R18** — **Always read memory before writing.** Check INDEX.md, decisions, lessons.
 **R19** — **Update guidelines when architecture changes.** Keep `memory/guidelines.md` current.
 **R20** — **Never push connection info to Git.** `memory/connections/` is gitignored.
+**R21** — **Always ask before executing commands or writing files.** Present a full summary (commands, files, risks) and wait for explicit approval. Read-only tasks don't need approval.
+**R22** — **Read-only tasks don't need approval.** Only mutations (commands, file writes, deletes).
+**R23** — **Repeat approval if context changes.** If the plan changes significantly after approval, ask again.
 
 ============================================================
 ## THE MESSAGE PROTOCOL
@@ -372,8 +375,9 @@ AI Engineering OS v0.4 — Multi-Agent Backend Brain
 12 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
            BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE, GITHUB
 Memory system with INDEX.md, guidelines.md, connections/
-20 rules (R1-R20) including memory, guidelines, and git safety
+23 rules (R1-R23) including user approval gate (R21-R23)
 Zero slash commands needed — auto-detect and route
+Update: bash .ai/update.sh or ask me to update
 
 ============================================================
 ## INSTALL MODE
@@ -385,6 +389,15 @@ When installing into another project:
 ```bash
 cd /path/to/your-project
 curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/master/setup.sh | bash
+```
+
+To update after installation:
+```bash
+# Via command
+bash .ai/update.sh
+
+# Or just ask me: "Update AI Engineering OS"
+# I'll run the update after your approval per R21.
 ```
 
 See `CLAUDE.install.md` for the installable version with `.ai/` paths.

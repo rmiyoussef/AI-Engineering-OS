@@ -68,6 +68,13 @@ Every request becomes a conversation between agents:
 **R14** — **Escalate after 3 failures.** Don't keep trying the same approach.
 **R15** — **One message at a time.** No parallel conversations per agent.
 **R16** — **Message protocol compliance.** Every message must follow the schema.
+**R17** — **Always read guidelines first.** Read `memory/guidelines.md` before every task.
+**R18** — **Always read memory before writing.** Check INDEX.md, decisions, lessons.
+**R19** — **Update guidelines when architecture changes.** Keep `memory/guidelines.md` current.
+**R20** — **Never push connection info to Git.** `memory/connections/` is gitignored.
+**R21** — **Always ask before executing commands or writing files.** Present a full summary (commands, files, risks) and wait for explicit approval. Read-only tasks don't need approval.
+**R22** — **Read-only tasks don't need approval.** Only mutations (commands, file writes, deletes).
+**R23** — **Repeat approval if context changes.** If the plan changes significantly after approval, ask again.
 
 ============================================================
 ## THE MESSAGE PROTOCOL
@@ -231,6 +238,7 @@ memory/
 ## VERSION
 ============================================================
 
-AI Engineering OS v0.3 — Rules Expansion
+AI Engineering OS v0.4 — Multi-Agent Backend Brain (Installed)
 Installed in `.ai/`
 Memory in `memory/`
+Update: bash .ai/update.sh

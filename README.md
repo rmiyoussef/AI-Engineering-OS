@@ -132,6 +132,14 @@ your-project/
     └── business/
 ```
 
+### Update
+
+```bash
+bash .ai/update.sh
+```
+
+Or just ask: *"Update AI Engineering OS"*
+
 ### Use It
 
 ```bash

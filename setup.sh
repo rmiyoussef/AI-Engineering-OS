@@ -131,6 +131,12 @@ download_file "workflows/STANDARD.md"   "$AI_DIR/workflows/STANDARD.md"
 echo -e "   └── Installing CLAUDE.md..."
 download_file "$CLAUDE_FILE"   "$AI_DIR/CLAUDE.md"
 
+# Download update script
+echo -e "   └── Installing update tools..."
+download_file "update.sh"   "$AI_DIR/update.sh"
+chmod +x "$AI_DIR/update.sh"
+download_file "VERSION"   "$AI_DIR/VERSION"
+
 # Create symlink
 ln -sf "$AI_DIR/CLAUDE.md" "./CLAUDE.md"
 
