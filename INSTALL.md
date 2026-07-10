@@ -15,7 +15,7 @@ One command from your project root:
 
 ```bash
 cd /path/to/your-project
-curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/main/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/master/setup.sh | bash
 ```
 
 The script will:
@@ -60,7 +60,7 @@ Same command, works from anywhere:
 
 ```bash
 cd /path/to/your-project
-curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/main/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/master/setup.sh | bash
 ```
 
 ---
