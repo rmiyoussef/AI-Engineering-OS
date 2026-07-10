@@ -27,11 +27,9 @@ echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 # Detect mode: local or remote
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd 2>/dev/null || pwd)"
 LOCAL_FILES=false
-
-# If we detect the OS repo files exist locally, use local mode
-if [ -f "$SCRIPT_DIR/brain/SYSTEM.md" ]; then
+_LOCAL_CHECK="${BASH_SOURCE:-}"
+if [ -n "$_LOCAL_CHECK" ] && [ -f "$(dirname "$_LOCAL_CHECK")/brain/SYSTEM.md" ] 2>/dev/null; then
     LOCAL_FILES=true
 fi
 
