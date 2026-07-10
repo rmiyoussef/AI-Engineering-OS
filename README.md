@@ -238,6 +238,23 @@ Key design decisions:
 
 ---
 
+---
+
+<div align="center">
+  <br>
+  <sub>
+    Built with ❤️ by
+    <a href="https://github.com/rmiyoussef">
+      <b>Rami Youssef</b>
+    </a>
+    <br>
+    <small>AI Engineering OS — v0.4</small>
+  </sub>
+  <br>
+</div>
+
+---
+
 ## Development
 
 To work on AI Engineering OS itself:
