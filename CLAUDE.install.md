@@ -1,7 +1,7 @@
 # AI Engineering OS — CLAUDE.md
 
 > **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
-> **Version:** v0.3 — Installed Mode
+> **Version:** v0.4 — Multi-Agent Backend Brain (Installed)
 > **This file:** Symlinked from `.ai/CLAUDE.md` to project root
 
 ============================================================

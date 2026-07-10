@@ -58,7 +58,21 @@ echo ""
 
 # Create directories
 mkdir -p "$AI_DIR"/{brain,agents,skills,rules,templates,workflows}
-mkdir -p "memory"/{decisions,architecture,lessons,sessions,business}
+mkdir -p "memory"/{decisions,architecture,lessons,sessions,business,connections}
+
+# Add memory/connections/ to .gitignore (never push connection info)
+if [ -f ".gitignore" ]; then
+    if ! grep -q "memory/connections/" ".gitignore" 2>/dev/null; then
+        echo "" >> ".gitignore"
+        echo "# AI Engineering OS — Database connections (schema only, no secrets)" >> ".gitignore"
+        echo "memory/connections/" >> ".gitignore"
+        echo -e "   ${GREEN}✓${NC} Added memory/connections/ to .gitignore"
+    fi
+else
+    echo "# AI Engineering OS — Database connections (schema only, no secrets)" > ".gitignore"
+    echo "memory/connections/" >> ".gitignore"
+    echo -e "   ${GREEN}✓${NC} Created .gitignore with memory/connections/ excluded"
+fi
 
 download_file() {
     local src="$1"
@@ -76,6 +90,7 @@ download_file "brain/MISSION.md"   "$AI_DIR/brain/MISSION.md"
 download_file "brain/PRINCIPLES.md"   "$AI_DIR/brain/PRINCIPLES.md"
 download_file "brain/LIMITATIONS.md"   "$AI_DIR/brain/LIMITATIONS.md"
 download_file "brain/RULES.md"   "$AI_DIR/brain/RULES.md"
+download_file "brain/MEMORY_SYSTEM.md"   "$AI_DIR/brain/MEMORY_SYSTEM.md"
 
 echo -e "   ├── Installing agents..."
 download_file "agents/PLANNER.md"   "$AI_DIR/agents/PLANNER.md"
@@ -87,6 +102,9 @@ download_file "agents/CLEAN_CODE.md"   "$AI_DIR/agents/CLEAN_CODE.md"
 download_file "agents/ARCHIVIST.md"   "$AI_DIR/agents/ARCHIVIST.md"
 download_file "agents/MEMORY.md"   "$AI_DIR/agents/MEMORY.md"
 download_file "agents/GITHUB.md"   "$AI_DIR/agents/GITHUB.md"
+download_file "agents/DATABASE.md"   "$AI_DIR/agents/DATABASE.md"
+download_file "agents/SECURITY.md"   "$AI_DIR/agents/SECURITY.md"
+download_file "agents/ARCHITECT.md"   "$AI_DIR/agents/ARCHITECT.md"
 
 echo -e "   ├── Installing skills..."
 download_file "skills/CODE_REVIEW.md"   "$AI_DIR/skills/CODE_REVIEW.md"
@@ -102,6 +120,7 @@ download_file "rules/NAMING_CONVENTIONS.md"   "$AI_DIR/rules/NAMING_CONVENTIONS.
 download_file "rules/SECURITY.md"   "$AI_DIR/rules/SECURITY.md"
 download_file "rules/DATABASE.md"   "$AI_DIR/rules/DATABASE.md"
 download_file "rules/API_DESIGN.md"   "$AI_DIR/rules/API_DESIGN.md"
+download_file "rules/GIT_SAFETY.md"   "$AI_DIR/rules/GIT_SAFETY.md"
 
 echo -e "   ├── Installing templates..."
 download_file "templates/MEMORY_DECISION.md"   "$AI_DIR/templates/MEMORY_DECISION.md"

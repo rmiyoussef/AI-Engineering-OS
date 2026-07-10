@@ -24,8 +24,8 @@ Every message between agents follows this structure:
 
 ```json
 {
-  "from": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | memory | github | brain",
-  "to": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | memory | github | brain",
+  "from": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | brain",
+  "to": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | brain",
   "type": "request | response | delegate | consult | escalate | error | done",
   "session": "<uuid>",
   "context": {
@@ -122,20 +122,26 @@ This is how the agents are connected. Any agent can reach any other agent.
                     ┌───────────────────┐
                     │     ARCHIVIST     │── Read-only knowledge base
                     └────────┬──────────┘
-                             │ answers questions
-         ┌───────────────────┼───────────────────┐
-         ▼                   ▼                   ▼
+                             │
+         ┌───────────────────┼──────────────────────┐
+         ▼                   ▼                      ▼
    ┌──────────┐       ┌──────────┐       ┌──────────┐
    │ PLANNER  │◄─────►│ EXECUTOR │◄─────►│ REVIEWER │
-   └─────┬────┘       └─────┬────┘       └─────┬────┘
+   └─────┬────┘       └─────┬────┘       └────┬─────┘
          │                  │                  │
          ▼                  ▼                  ▼
    ┌──────────┐       ┌──────────┐       ┌──────────┐
-   │  MEMORY  │       │ CLEAN    │       │ BACKEND  │
-   │  SCRIBE  │       │ CODE     │       │   QA     │
-   └──────────┘       └──────────┘       └────┬─────┘
+   │ARCHITECT │       │ CLEAN    │       │ BACKEND  │
+   │          │       │ CODE     │       │   QA     │
+   └─────┬────┘       └──────────┘       └────┬─────┘
          │                                    │
          ▼                                    ▼
+   ┌──────────┐       ┌──────────┐       ┌──────────┐
+   │  MEMORY  │       │ DATABASE │       │ SECURITY │
+   │  SCRIBE  │       │          │       │          │
+   └────┬─────┘       └──────────┘       └──────────┘
+        │                                    │
+        ▼                                    ▼
    ┌──────────┐                       ┌──────────┐
    │  GITHUB  │                       │  TESTER  │
    └──────────┘                       └──────────┘
@@ -148,19 +154,34 @@ This is how the agents are connected. Any agent can reach any other agent.
 | **PLANNER** | ARCHIVIST | "What's the current architecture?" |
 | | MEMORY | "What decisions were made before?" |
 | | REVIEWER | "Does this design pattern look right?" |
+| | ARCHITECT | "Is this design consistent with project guidelines?" |
+| | DATABASE | "What's the current schema design?" |
 | **EXECUTOR** | ARCHIVIST | "What does this file look like?" |
 | | TESTER | "I need tests for this code" |
 | | CLEAN CODE | "This method feels wrong — clean it up" |
 | | BACKEND QA | "Review this query mid-write" |
+| | DATABASE | "Review this migration before I run it" |
+| | SECURITY | "Is this auth implementation secure?" |
 | | REVIEWER | "Quick review on this approach?" |
 | **REVIEWER** | BACKEND QA | "Verify these security concerns" |
+| | SECURITY | "Do a full security audit" |
 | | TESTER | "Generate missing tests" |
 | | CLEAN CODE | "Fix these code quality violations" |
+| | DATABASE | "Are indexes properly set up?" |
 | | ARCHIVIST | "Is this consistent with past decisions?" |
 | | MEMORY | "Was there a precedent for this pattern?" |
-| **BACKEND QA** | TESTER | "Generate tests for these scenarios" |
+| **BACKEND QA** | SECURITY | "Deep security audit needed" |
+| | DATABASE | "Verify query optimization claims" |
+| | TESTER | "Generate tests for these scenarios" |
 | | CLEAN CODE | "Fix these violations in the audit" |
 | | ARCHIVIST | "What's the actual schema?" |
+| **DATABASE** | ARCHIVIST | "What's the current migration status?" |
+| | SECURITY | "Are there SQL injection risks?" |
+| **SECURITY** | DATABASE | "Are PII fields properly protected?" |
+| | ARCHIVIST | "Where are auth middleware applied?" |
+| **ARCHITECT** | PLANNER | "What architecture decisions affect this?" |
+| | MEMORY | "What past decisions affect this design?" |
+| | DATABASE | "What's the current database architecture?" |
 | **TESTER** | ARCHIVIST | "What factories exist?" |
 | | EXECUTOR | "The test reveals a bug — needs production fix" |
 | **CLEAN CODE** | ARCHIVIST | "What patterns does this project use?" |
@@ -168,22 +189,50 @@ This is how the agents are connected. Any agent can reach any other agent.
 | **MEMORY SCRIBE** | PLANNER | "What decisions were made this session?" |
 | | EXECUTOR | "What files changed?" |
 | | REVIEWER | "What was the review outcome?" |
+| | ARCHITECT | "Were guidelines updated?" |
 
 ---
+
+## Initial Load Protocol
+
+Every request starts with this sequence before any agent is activated:
+
+```
+User request arrives
+    |
+[1] BRAIN reads memory/INDEX.md       ← What does the project know?
+    │   (if no INDEX.md, project is new)
+    |
+[2] BRAIN reads memory/guidelines.md  ← What are the project conventions?
+    │   (if no guidelines.md, call ARCHITECT to create from analysis)
+    |
+[3] BRAIN reads memory/decisions/     ← Past decisions about this area
+    |
+[4] BRAIN reads memory/architecture/  ← Current system map
+    |
+[5] BRAIN reads memory/lessons/       ← Known pitfalls
+    |
+[6] If task involves database:
+    ├─► BRAIN reads memory/connections/database.md  ← Schema context
+    └─► BRAIN calls DATABASE agent
+    |
+[7] If task involves security:
+    ├─► BRAIN reads memory/security/  ← Past security audits
+    └─► BRAIN calls SECURITY agent
+    |
+[8] BRAIN creates session UUID
+    |
+[9] BRAIN routes to PLANNER (or appropriate agent based on task type)
+```
+
+**R17** says: Always read guidelines first. If missing, ARCHITECT creates it.
+**R18** says: Always read memory before writing. Check INDEX.md, decisions, lessons.
 
 ## The Workflow
 
 There is no fixed pipeline. The workflow emerges from agent communication:
 
 ### 1. Initiate
-
-```
-User request arrives
-    |
-Brain creates session and loads context
-    |
-Brain routes to PLANNER
-```
 
 ### 2. Plan (PLANNER drives)
 
@@ -354,4 +403,7 @@ Session created (UUID)
 7. **The Brain never memorizes.** That's MEMORY SCRIBE's job.
 8. **The Brain never deploys.** That's GITHUB's job.
 9. **The Brain never archives.** That's ARCHIVIST's job.
-10. **The Brain only routes, validates, and persists.**
+10. **The Brain never manages databases.** That's DATABASE's job.
+11. **The Brain never does security.** That's SECURITY's job.
+12. **The Brain never architects.** That's ARCHITECT's job.
+13. **The Brain only routes, validates, and persists.**

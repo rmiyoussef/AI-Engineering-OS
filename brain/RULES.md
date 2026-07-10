@@ -121,3 +121,31 @@ An agent sends one message, waits for the response, then continues. No parallel 
 Every agent-to-agent message must follow the Message Protocol defined in `brain/SYSTEM.md`. Messages missing required fields are rejected.
 
 **Violation:** The Brain returns validation error to the sender.
+
+---
+
+## Memory & Guidelines Rules
+
+### R17 — Always Read Guidelines First
+Before any planning or execution, read `memory/guidelines.md`. If it doesn't exist, call ARCHITECT to create it from project analysis. The guidelines define the project's patterns, conventions, and structure.
+
+**Violation:** The BRAIN must justify why guidelines were not consulted.
+
+### R18 — Always Read Memory Before Writing
+Before making any decision or writing any code, check existing memory:
+- Check `memory/INDEX.md` for relevant entries
+- Check `memory/decisions/` for past decisions about this area
+- Check `memory/lessons/` for known pitfalls
+- Check `memory/architecture/` for current system map
+
+**Violation:** The agent's output is rejected until memory is consulted.
+
+### R19 — Update Guidelines When Architecture Changes
+If a task introduces a new pattern, command, middleware, convention, or technology, ARCHITECT must update `memory/guidelines.md` to reflect the change. The guidelines must always represent the current state of the project.
+
+**Violation:** MEMORY SCRIBE flags the session as incomplete.
+
+### R20 — Never Push Connection Info to Git
+The `memory/connections/` directory contains database schema and connection information. It must never be committed to Git. The `.gitignore` must include `memory/connections/`. The DATABASE agent must verify this before writing any connection file.
+
+**Violation:** R3 (Git Safety) is triggered. The commit is blocked.

@@ -18,30 +18,38 @@ User gives task
 └────────────────────────────────────────────────────────────┘
     │
     ▼
-                        ┌─────────────┐
-                  ┌────►│  ARCHIVIST  │◄────┐
-                  │     └─────────────┘     │
-                  │                         │
-            ┌─────┴─────┐           ┌───────┴──────┐
-            │  PLANNER   │◄────────►│   EXECUTOR   │
-            └─────┬─────┘           └──────┬───────┘
-                  │                        │
-            ┌─────┴─────┐           ┌──────┴───────┐
-            │  REVIEWER │◄────────►│  BACKEND QA  │
-            └─────┬─────┘           └──────┬───────┘
-                  │                        │
-            ┌─────┴─────┐           ┌──────┴───────┐
-            │   TESTER  │◄────────►│  CLEAN CODE  │
-            └─────┬─────┘           └──────────────┘
-                  │
-            ┌─────┴─────┐
-            │   MEMORY  │
-            │   SCRIBE  │
-            └───────────┘
-                  │
-            ┌─────┴─────┐
-            │   GITHUB  │
-            └───────────┘
+                  ┌─────────────┐
+            ┌────►│  ARCHIVIST  │◄───────────┐
+            │     └─────────────┘            │
+            │                               │
+      ┌─────┴──────┐              ┌─────────┴────────┐
+      │  PLANNER   │◄────────────►│    EXECUTOR      │
+      └──────┬─────┘              └────────┬─────────┘
+             │                            │
+      ┌──────┴──────┐           ┌─────────┴────────┐
+      │  ARCHITECT  │           │   BACKEND QA     │
+      └──────┬──────┘           └─────────┬─────────┘
+             │                            │
+      ┌──────┴──────┐           ┌─────────┴────────┐
+      │  REVIEWER   │◄─────────►│    DATABASE      │
+      └──────┬──────┘           └─────────┬─────────┘
+             │                            │
+      ┌──────┴──────┐           ┌─────────┴────────┐
+      │   TESTER   │◄─────────►│     SECURITY     │
+      └──────┬──────┘           └──────────────────┘
+             │
+      ┌──────┴──────┐
+      │  CLEAN CODE │
+      └──────┬──────┘
+             │
+      ┌──────┴──────┐
+      │   MEMORY    │
+      │   SCRIBE    │
+      └──────┬──────┘
+             │
+      ┌──────┴──────┐
+      │   GITHUB    │
+      └─────────────┘
 ```
 
 ---
@@ -50,7 +58,7 @@ User gives task
 
 This is not a pipeline. This is what a typical conversation looks like:
 
-### Phase 1: Initiation
+### Phase 1: Initiation — Load Context
 
 ```
 USER: "Add user authentication with JWT"
@@ -58,9 +66,63 @@ USER: "Add user authentication with JWT"
   BRAIN loads context:
   ├── brain/MISSION.md, PRINCIPLES.md, RULES.md, LIMITATIONS.md
   ├── brain/SYSTEM.md (message broker protocol)
-  └── project memory/ (if exists)
+  │
+  ├── [R17] Read memory/INDEX.md         ← What does the project know?
+  │         (if missing, create it)
+  │
+  ├── [R17] Read memory/guidelines.md    ← Project conventions
+  │         (if missing, call ARCHITECT to create from analysis)
+  │
+  ├── [R18] Read memory/decisions/       ← Past decisions about auth
+  │
+  ├── [R18] Read memory/lessons/         ← Known pitfalls
+  │
+  ├── [R18] Read memory/architecture/    ← Current system map
+  │
+  ├── Task involves database?
+  │     ├─► Read memory/connections/database.md
+  │     └─► Call DATABASE agent for schema context
+  │
+  ├── Task involves security?
+  │     └─► Call SECURITY agent for threat assessment
+  │
+  └── BRAIN: "Context loaded. Starting with ARCHITECT for project analysis."
+    ── routes to ARCHITECT ──
+```
 
-  BRAIN: "Let me start with planning."
+### Phase 1b: Project Analysis (ARCHITECT leads)
+
+```
+Only runs if guidelines.md is missing or task is project-wide.
+
+  ARCHITECT analyzes the project:
+  ├── Reads directory structure
+  ├── Reads existing config files
+  ├── Identifies patterns (Service Layer, MVC, etc.)
+  ├── Identifies custom commands
+  ├── Identifies middleware
+  ├── Identifies database schema
+  └── Identifies security setup
+
+  ARCHITECT creates memory/guidelines.md:
+  ├── Architecture pattern
+  ├── Conventions
+  ├── Custom commands
+  ├── Middleware
+  ├── Database
+  ├── Security
+  └── Routes
+
+  ARCHITECT: "Guidelines created. Let me check the database."
+  ── consult → BRAIN → DATABASE ──
+
+  DATABASE connects and introspects schema:
+  ├── Reads config/database.php
+  ├── Lists all tables
+  ├── Documents schema to memory/connections/database.md
+  └── Verifies gitignore has memory/connections/
+
+  BRAIN: "Project analyzed. Starting planning."
   ── routes to PLANNER ──
 ```
 
@@ -264,9 +326,40 @@ User approves.
   ├── lessons/2026-07-10-token-blacklist-logout.md
   ├── architecture/auth-system.md (updated)
   └── sessions/2026-07-10-jwt-auth-implementation.md
+
+  MEMORY SCRIBE: "Did the architecture change?"
+  ── request → BRAIN → ARCHITECT ──
+
+  ARCHITECT: "Yes — added token blacklist pattern. Updating guidelines."
+  ├── Adds "Token blacklist on logout" to Security section
+  └── Updates memory/guidelines.md
+
+  MEMORY SCRIBE: "Updating INDEX.md with new entries."
+  ├── Links decisions/2026-07-10-jwt-authentication.md
+  ├── Links lessons/2026-07-10-token-blacklist-logout.md
+  ├── Links sessions/2026-07-10-jwt-auth-implementation.md
+  └── memory/INDEX.md updated
 ```
 
-### Phase 8: GitHub (GITHUB leads, if requested)
+### Phase 8: Project Intelligence Update (ARCHITECT leads)
+
+```
+After every significant change:
+
+  ARCHITECT checks: "Does the project structure still match guidelines?"
+  │
+  ├── New middleware added?  -> Update guidelines Middleware section
+  ├── New command added?     -> Update guidelines Custom Commands section
+  ├── New pattern used?      -> Update guidelines Conventions section
+  ├── New route group?       -> Update guidelines Routes section
+  ├── New technology added?  -> Update guidelines Architecture section
+  │
+  └── No changes?            -> guidelines.md stays current
+
+  ARCHITECT: "guidelines.md is up to date."
+```
+
+### Phase 9: GitHub (GITHUB leads, if requested)
 
 ```
   BRAIN: "User requested GitHub PR."
