@@ -9,18 +9,13 @@ Install the **AI Engineering OS Brain** into any project.
 
 ---
 
-## Quick Install (recommended)
+## Quick Install
 
-Run the setup script from your project root:
+One command from your project root:
 
 ```bash
 cd /path/to/your-project
-
-# Copy the setup script from the OS repo
-cp /path/to/AI-Engineering-OS/setup.sh ./setup.sh
-
-# Run it
-bash setup.sh
+curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/main/setup.sh | bash
 ```
 
 The script will:
@@ -32,8 +27,6 @@ The script will:
 ---
 
 ## Manual Install
-
-If you prefer to do it yourself:
 
 ```bash
 cd /path/to/your-project
@@ -61,20 +54,13 @@ ln -sf .ai/CLAUDE.md ./CLAUDE.md
 
 ---
 
-## Installing from GitHub
+## ## Installing from GitHub
 
-Once the repo is on GitHub:
+Same command, works from anywhere:
 
 ```bash
 cd /path/to/your-project
-
-# One-command install
-curl -fsSL https://raw.githubusercontent.com/YOUR_ORG/AI-Engineering-OS/main/setup.sh | bash
-
-# Or download and run
-curl -O https://raw.githubusercontent.com/YOUR_ORG/AI-Engineering-OS/main/setup.sh
-bash setup.sh
-rm setup.sh
+curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/main/setup.sh | bash
 ```
 
 ---
