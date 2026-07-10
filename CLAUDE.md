@@ -247,6 +247,18 @@ Read `agents/MEMORY.md` and `agents/ARCHITECT.md` for schemas.
 
 Read `agents/GITHUB.md` for the full schema.
 
+### Phase 0: GitHub Tasks (GITHUB TASKS leads, on demand)
+When user says "Give me list building tasks" or "Fix task #1234":
+- Fetches issues from GitHub project board
+- Analyzes task requirements carefully
+- Creates structured plan with summary, requirements, risks
+- Presents to user for approval
+- On approval: creates staging branch, runs full agent mesh
+- Never pushes without user approval (R21)
+- Always uses `staging/<module>/<name>` branches
+
+Read `agents/GITHUB_TASKS.md` for the full schema.
+
 ### Phase 10: Respond
 - Summarize what was done
 - List files changed
@@ -295,6 +307,7 @@ REVIEWER score < 7
 | **REVIEWER** | Inspector — scores code 1-10, manages fix loop | `agents/REVIEWER.md` |
 | **MEMORY SCRIBE** | Historian — persists decisions, lessons, index | `agents/MEMORY.md` |
 | **GITHUB** | Integrator — branches, commits, PRs | `agents/GITHUB.md` |
+| **GITHUB TASKS** | GitHub task manager — fetches issues, analyzes, plans, manages delivery | `agents/GITHUB_TASKS.md` |
 | **BRAIN (you)** | Message broker — routes, validates, persists | `brain/SYSTEM.md` |
 
 ============================================================
@@ -372,8 +385,8 @@ Read `brain/MEMORY_SYSTEM.md` for full protocol.
 ============================================================
 
 AI Engineering OS v0.4 — Multi-Agent Backend Brain
-12 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
-           BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE, GITHUB
+13 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
+           BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE, GITHUB, GITHUB TASKS
 Memory system with INDEX.md, guidelines.md, connections/
 23 rules (R1-R23) including user approval gate (R21-R23)
 Zero slash commands needed — auto-detect and route

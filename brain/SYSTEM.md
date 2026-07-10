@@ -24,8 +24,8 @@ Every message between agents follows this structure:
 
 ```json
 {
-  "from": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | brain",
-  "to": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | brain",
+  "from": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | brain",
+  "to": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | brain",
   "type": "request | response | delegate | consult | escalate | error | done",
   "session": "<uuid>",
   "context": {
@@ -190,6 +190,18 @@ This is how the agents are connected. Any agent can reach any other agent.
 | | EXECUTOR | "What files changed?" |
 | | REVIEWER | "What was the review outcome?" |
 | | ARCHITECT | "Were guidelines updated?" |
+| **GITHUB TASKS** | PLANNER | "Refine the execution plan for this task" |
+| | ARCHIVIST | "Read me the files related to this task" |
+| | ARCHITECT | "What are the project guidelines?" |
+| | DATABASE | "What schema relates to this task?" |
+| | SECURITY | "Review this for vulnerabilities" |
+| | EXECUTOR | "Implement the changes per the plan" |
+| | CLEAN CODE | "Clean up the implementation" |
+| | BACKEND QA | "Audit the backend changes" |
+| | REVIEWER | "Score the implementation 1-10" |
+| | TESTER | "Generate tests for the changes" |
+| | MEMORY | "Document what was done" |
+| | GITHUB | "Create staging branch and PR" |
 
 ---
 
