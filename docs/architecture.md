@@ -66,13 +66,13 @@ An **Agent** is a specialized role with a defined responsibility. Each agent rec
 
 Every agent must return a structured object following a defined schema:
 
-| Agent | Returns |
-|-------|---------|
-| `Planner` | `{ goal, affectedFiles, risks, dependencies, executionPlan, questions }` |
-| `Reviewer` | `{ issues, suggestions, performance, security, score }` |
-| `Memory` | `{ decision, architectureChange, businessRule, filesChanged, lessonsLearned }` |
-| `Executor` | `{ filesChanged, testResults, lintResults, status }` |
-| `Architect` | `{ decisions, diagrams, tradeoffs, recommendations }` |
+| Agent | Returns | File |
+|-------|---------|------|
+| `PLANNER` | `{ goal, affectedFiles, risks, dependencies, executionPlan, questions }` | `agents/PLANNER.md` |
+| `EXECUTOR` | `{ filesChanged, testResults, lintResults, status }` | `agents/EXECUTOR.md` |
+| `REVIEWER` | `{ issues, suggestions, performance, security, score }` | `agents/REVIEWER.md` |
+| `MEMORY SCRIBE` | `{ decisions, lessons, architectureChanges, sessionSummary }` | `agents/MEMORY.md` |
+| `GITHUB` | `{ branch, commits, prUrl, prBody, status }` | `agents/GITHUB.md` |
 
 ### Why Structured Outputs
 
@@ -179,16 +179,16 @@ User Request
 
 ## 6. Build Order
 
-| Step | Layer | What It Produces | Why This Order |
-|------|-------|------------------|----------------|
-| 1 | **Brain** | `brain/SYSTEM.md`, `MISSION.md`, `PRINCIPLES.md`, `LIMITATIONS.md`, `RULES.md` | Everything depends on the Brain |
-| 2 | **Workflow** | `workflows/` | Workflows orchestrate all agent interaction |
-| 3 | **Rules** | `rules/` | Rules constrain every agent's behavior |
-| 4 | **Skills** | `skills/` | Skills give agents their capabilities |
-| 5 | **Agents** | `agents/` | Agents use skills and follow rules |
-| 6 | **Templates** | `templates/` | Templates bootstrap new work |
-| 7 | **Memory** | `brain/` interface layer | Memory requires everything above to know what to store |
-| 8 | **Install System** | Install scripts, `install/` | Everything must exist before it can be installed |
+| Step | Layer | What It Produces | Status |
+|------|-------|------------------|--------|
+| 1 | **Brain** | `CLAUDE.md`, `brain/SYSTEM.md`, `MISSION.md`, `PRINCIPLES.md`, `LIMITATIONS.md`, `RULES.md` | ✅ v0.1 |
+| 2 | **Workflow** | `workflows/STANDARD.md` | ✅ v0.1 |
+| 3 | **Rules** | `rules/` | 🔲 v0.2 planned |
+| 4 | **Skills** | `skills/CODE_REVIEW.md`, `TESTING.md`, `GIT.md`, `MEMORY.md` | ✅ v0.1 |
+| 5 | **Agents** | `agents/PLANNER.md`, `EXECUTOR.md`, `REVIEWER.md`, `MEMORY.md`, `GITHUB.md` | ✅ v0.1 |
+| 6 | **Templates** | `templates/MEMORY_DECISION.md` | ✅ v0.1 |
+| 7 | **Memory** | OS memory interface (protocol defined in `brain/SYSTEM.md`) | ✅ v0.1 |
+| 8 | **Install System** | Install scripts | 🔲 v0.7 planned |
 
 ---
 
@@ -227,16 +227,16 @@ User Request
 
 ## 10. Version Roadmap
 
-| Version | Focus | Contents |
-|---------|-------|----------|
-| v0.1 | **Foundation** | Brain, architecture doc, rules |
-| v0.2 | **Skills** | Core skills (laravel, review, testing, git, sql) |
-| v0.3 | **Agents** | Planner, Executor, Reviewer, Architect |
-| v0.4 | **Memory** | Memory interface, stores, querying |
-| v0.5 | **GitHub** | Release workflow, changelog, package structure |
-| v0.6 | **Templates** | Project scaffolding, agent templates, skill templates |
-| v0.7 | **Install** | Install script that bootstraps any repo |
-| v1.0 | **Stable** | Battle-tested, documented, versioned |
+| Version | Focus | Contents | Status |
+|---------|-------|----------|--------|
+| v0.1 | **Foundation** | Brain (`CLAUDE.md`, SYSTEM, MISSION, PRINCIPLES, LIMITATIONS, RULES), Workflow (STANDARD), Skills (CODE_REVIEW, TESTING, GIT, MEMORY), Agents (PLANNER, EXECUTOR, REVIEWER, MEMORY, GITHUB), Templates (MEMORY_DECISION), architecture docs | ✅ **Done** |
+| v0.2 | **Skills expansion** | Framework skills (laravel, sql, redis, react, vue), language skills (php, js, python) | 🔲 Planned |
+| v0.3 | **Rules expansion** | `rules/` directory with domain-agnostic rule files | 🔲 Planned |
+| v0.4 | **Memory enhancements** | Memory querying, linking, lifecycle management | 🔲 Planned |
+| v0.5 | **GitHub release workflow** | Changelog, semantic versioning, release automation | 🔲 Planned |
+| v0.6 | **Templates expansion** | Project scaffolding, agent templates, skill templates | 🔲 Planned |
+| v0.7 | **Install system** | Install script that bootstraps any repo with AI-Engineering-OS | 🔲 Planned |
+| v1.0 | **Stable** | Battle-tested, documented, versioned, with upgrade guides | 🔲 Planned |
 
 ---
 
