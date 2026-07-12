@@ -222,6 +222,59 @@ Key design decisions:
 
 ---
 
+## Token Optimization — Caveman ULTRA
+
+AI Engineering OS ships with **[Caveman](https://github.com/juliusbrussee/caveman)** at **ULTRA** compression level — built-in token optimization that cuts output tokens by **~67%** without losing technical accuracy.
+
+### How It Works
+
+Caveman compresses AI agent output by eliminating filler while preserving every byte of code, commands, file paths, and error messages.
+
+| Component | Status |
+|-----------|--------|
+| Code blocks | 🟢 Untouched — byte-perfect |
+| Commands | 🟢 Untouched |
+| File paths | 🟢 Untouched |
+| Error messages | 🟢 Untouched — quoted exact |
+| Explanations | 🔧 Compressed — fragments replace prose |
+| Filler (articles, pleasantries, hedging) | 🔥 Dropped |
+
+### Benchmark Results (5 Response Types)
+
+| Response Type | Normal | ULTRA | Saved |
+|---|---|---|---|
+| Debug help | 41 tok | 13 tok | **68%** |
+| Code explanation | 38 tok | 11 tok | **71%** |
+| Architecture suggestion | 34 tok | 11 tok | **68%** |
+| Step-by-step fix | 42 tok | 17 tok | **60%** |
+| Code review feedback | 53 tok | 17 tok | **68%** |
+| **Average** | **41.6 tok** | **13.8 tok** | **67%** |
+
+### Compression Levels
+
+| Level | Effect |
+|-------|--------|
+| `lite` | No filler/hedging. Professional but tight |
+| `full` | Drop articles, fragments OK, short synonyms (default) |
+| `ultra` | Strip conjunctions when unambiguous. One word when enough. **Max compression** |
+| `wenyan` | Classical Chinese — 80-90% character reduction |
+
+### Commands
+
+- `/caveman [lite\|full\|ultra\|wenyan]` — switch level mid-session
+- `/caveman-stats` — show tokens saved
+- `normal mode` — disable caveman
+- Statusline shows `[CAVEMAN] ⛏ 12.4k` when active
+
+### Per-Session Savings
+
+| Metric | Without | With ULTRA |
+|--------|---------|------------|
+| Output tokens (100-turn session) | ~40,000 | ~13,200 |
+| **Saved per session** | — | **~26,800 tokens** |
+
+---
+
 ## Version Roadmap
 
 | Version | Focus | Status |

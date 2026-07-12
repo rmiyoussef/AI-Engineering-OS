@@ -2,13 +2,14 @@
 
 > How the BRAIN organizes, indexes, and queries project memory.
 > Memory is the project's persistent knowledge. It grows with every session.
+> Memory lives in `.claude/memory/` — in your project root, not in the AI-Engineering-OS folder.
 
 ---
 
 ## Memory Layout
 
 ```
-memory/
+.claude/memory/
 ├── INDEX.md                         ← Master index (auto-maintained)
 ├── guidelines.md                    ← Project structure & conventions
 ├── decisions/                       ← Architecture decisions
@@ -17,17 +18,44 @@ memory/
 │   └── auth-system.md
 ├── lessons/                         ← Things learned
 │   └── 2026-07-10-n-plus-one-fix.md
-├── sessions/                        ← Session summaries
-│   └── 2026-07-10-implement-auth.md
+├── sessions/                        ← Every interaction, task, discussion
+│   ├── 2026-07-10-implement-auth.md
+│   └── 2026-07-10-discussion-api-design.md
 ├── business/                        ← Business rules
 │   └── two-factor-auth.md
 └── connections/                     ← Database connections ⚠️ GITIGNORED
     └── database.md
 ```
 
+### Why `.claude/memory/`?
+
+| Reason | Explanation |
+|--------|-------------|
+| **Persistence** | Claude Code reads `.claude/` automatically. Memory persists across sessions. |
+| **Clean project root** | No extra `memory/` folder cluttering your project. |
+| **Standard location** | `.claude/` is the standard Claude Code directory. |
+| **Git safety** | Can be gitignored or committed per-project. |
+
+### Session Entry — Every Interaction
+
+**Every single interaction** — task, discussion, question, exploration — must write a session entry. This ensures:
+
+- If you close the terminal, you can resume exactly where you left off
+- Nothing is lost between sessions
+- The BRAIN reads past sessions before starting new work
+- Continuity is maintained across days
+
+A session entry is written after:
+- ✅ Completing a task
+- ✅ Having a design discussion
+- ✅ Exploring the codebase
+- ✅ Answering a question
+- ✅ Making any decision
+- ✅ Any interaction that produced value
+
 ### guidelines.md
 
-The `memory/guidelines.md` file holds the project's architecture, conventions, commands, middleware, database rules, and security setup. It is created by ARCHITECT on first install using `templates/GUIDELINES.md` as a starting point.
+The `.claude/memory/guidelines.md` file holds the project's architecture, conventions, commands, middleware, database rules, and security setup. Created by ARCHITECT on first install using `templates/GUIDELINES.md`.
 
 See `agents/ARCHITECT.md` for how guidelines are managed.
 
@@ -35,20 +63,20 @@ See `agents/ARCHITECT.md` for how guidelines are managed.
 
 | Path | Committed? | Why |
 |------|-----------|-----|
-| `memory/decisions/` | ✅ Yes | Architecture decisions are project knowledge |
-| `memory/architecture/` | ✅ Yes | Component maps are part of the project |
-| `memory/lessons/` | ✅ Yes | Lessons benefit the whole team |
-| `memory/sessions/` | ✅ Yes | Session history helps onboard new devs |
-| `memory/business/` | ✅ Yes | Business rules are project knowledge |
-| `memory/guidelines.md` | ✅ Yes | Project structure is shared knowledge |
-| `memory/INDEX.md` | ✅ Yes | Master index helps everyone navigate |
-| `memory/connections/` | ❌ **No** | Contains schema info but lives near potential secrets |
+| `.claude/memory/decisions/` | ✅ Recommended | Architecture decisions are project knowledge |
+| `.claude/memory/architecture/` | ✅ Recommended | Component maps are part of the project |
+| `.claude/memory/lessons/` | ✅ Recommended | Lessons benefit the whole team |
+| `.claude/memory/sessions/` | ✅ Recommended | Session history helps resume work |
+| `.claude/memory/business/` | ✅ Recommended | Business rules are project knowledge |
+| `.claude/memory/guidelines.md` | ✅ Recommended | Project structure is shared knowledge |
+| `.claude/memory/INDEX.md` | ✅ Recommended | Master index helps everyone navigate |
+| `.claude/memory/connections/` | ❌ **Never** | Contains schema info — never push secrets |
 
 ---
 
 ## INDEX.md — The Master Index
 
-The `memory/INDEX.md` file is the **entry point for all memory queries**. It's auto-maintained by the MEMORY SCRIBE after every session.
+The `.claude/memory/INDEX.md` file is the **entry point for all memory queries**. Auto-maintained by MEMORY SCRIBE after every session.
 
 ### Format
 
@@ -62,7 +90,6 @@ The `memory/INDEX.md` file is the **entry point for all memory queries**. It's a
 
 ## Architecture
 - [Auth System](architecture/auth-system.md) — Login, register, password reset
-- [Order Processing](architecture/order-processing.md) — Order lifecycle
 
 ## Lessons
 - [N+1 Query Fix](lessons/2026-07-10-n-plus-one-fix.md) — Eager loading posts
@@ -76,10 +103,10 @@ The `memory/INDEX.md` file is the **entry point for all memory queries**. It's a
 After every session, MEMORY SCRIBE calls:
 ```
 MEMORY SCRIBE: "I need to update INDEX.md"
-  ├─► List files in memory/decisions/ → add new ones
-  ├─► List files in memory/lessons/ → add new ones
-  ├─► List files in memory/sessions/ → add new ones
-  └─► List files in memory/architecture/ → add new ones
+  ├─► List files in .claude/memory/decisions/ → add new ones
+  ├─► List files in .claude/memory/lessons/ → add new ones
+  ├─► List files in .claude/memory/sessions/ → add new ones
+  └─► List files in .claude/memory/architecture/ → add new ones
 ```
 
 ---
@@ -91,24 +118,60 @@ MEMORY SCRIBE: "I need to update INDEX.md"
 ```
 BRAIN receives task
     │
-    ├─► Read memory/INDEX.md         ← What does the project know?
-    ├─► Read memory/guidelines.md    ← What are the project's conventions?
-    ├─► Read memory/decisions/       ← Past decisions about this area
-    ├─► Read memory/architecture/    ← Current component map
-    ├─► Read memory/lessons/         ← Known pitfalls
-    └─► Read memory/connections/     ← Database schema (if needed)
+    ├─► Read .claude/memory/INDEX.md       ← What does the project know?
+    ├─► Read .claude/memory/guidelines.md  ← Project conventions
+    ├─► Read .claude/memory/decisions/     ← Past decisions
+    ├─► Read .claude/memory/architecture/  ← Current component map
+    ├─► Read .claude/memory/lessons/       ← Known pitfalls
+    └─► Read .claude/memory/connections/   ← Database schema (if needed)
 ```
 
-### After Any Work
+### After Any Work (Always)
 
 ```
-Task complete
+Task/Discussion/Question complete — ALWAYS write session
     │
-    ├─► MEMORY SCRIBE writes decisions/   ← What was decided
-    ├─► MEMORY SCRIBE writes lessons/      ← What was learned
-    ├─► MEMORY SCRIBE writes session/      ← What happened
+    ├─► MEMORY SCRIBE writes session/      ← WHAT happened (ALWAYS)
+    ├─► MEMORY SCRIBE writes decisions/    ← WHAT was decided (if applicable)
+    ├─► MEMORY SCRIBE writes lessons/      ← WHAT was learned (if applicable)
     ├─► ARCHITECT updates guidelines/      ← Did architecture change?
     └─► MEMORY SCRIBE updates INDEX.md     ← Keep index in sync
+```
+
+---
+
+## Session Entry — Written After EVERY Interaction
+
+This is the most important rule. Every interaction writes a session entry.
+
+### Session File Format
+
+```markdown
+# Session: 2026-07-10 - Discussion about API Design
+
+**Date:** 2026-07-10
+**Type:** Task | Discussion | Exploration | Question
+**Duration:** ~15 min
+
+## Context
+What prompted this session.
+
+## What Happened
+Summary of the conversation, decisions, findings.
+
+## Key Takeaways
+- Point 1
+- Point 2
+
+## Files Referenced
+- path/to/file.php
+
+## Next Steps
+- [ ] Action item 1
+- [ ] Action item 2
+
+## Related
+- See also: [[decisions/past-decision.md]]
 ```
 
 ---
@@ -153,29 +216,6 @@ Task complete
 **Applies to:** {{files/patterns}}
 ```
 
-### Session File
-
-```markdown
-# Session: {{date}} - {{goal}}
-
-**Goal:** {{what we wanted to achieve}}
-**Outcome:** {{what actually happened}}
-**Agents Involved:** PLANNER, EXECUTOR, REVIEWER, etc.
-
-## Summary
-{{paragraph summary}}
-
-## Files Changed
-- {{path}} — {{change description}}
-
-## Review
-- Score: {{score}}/10
-- Issues: {{count}}
-
-## Next Steps
-- {{open items}}
-```
-
 ---
 
 ## How Agents Use Memory
@@ -193,3 +233,9 @@ Task complete
 | **TESTER** | Nothing specific | test files |
 | **MEMORY SCRIBE** | All stores (to build index) | decisions/, lessons/, sessions/, INDEX.md |
 | **GITHUB** | decisions/, INDEX.md | Nothing |
+
+---
+
+## Template
+
+Use `templates/MEMORY_DECISION.md` for decision entries.

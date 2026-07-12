@@ -60,7 +60,7 @@ else
 fi
 
 # Confirm with user
-echo -e "   ${YELLOW}This will update .ai/ files. Your memory/ directory will NOT be touched.${NC}"
+echo -e "   ${YELLOW}This will update .ai/ files. Your .claude/memory/ directory will NOT be touched.${NC}"
 echo -e "   ${YELLOW}Existing .ai/ files will be overwritten.${NC}"
 echo ""
 read -rp "   Proceed with update? (y/N): " CONFIRM
@@ -155,7 +155,7 @@ echo ""
 echo -e "   ${CYAN}Changes:${NC}"
 echo -e "   Check https://github.com/$REPO/releases for changelog."
 echo ""
-echo -e "   ${YELLOW}Note:${NC} memory/ directory was not modified."
+echo -e "   ${YELLOW}Note:${NC} .claude/memory/ directory was not modified."
 if [ -f "$AI_DIR/VERSION.bak" ]; then
     rm "$AI_DIR/VERSION.bak"
 fi

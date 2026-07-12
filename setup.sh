@@ -58,20 +58,20 @@ echo ""
 
 # Create directories
 mkdir -p "$AI_DIR"/{brain,agents,skills,rules,templates,workflows}
-mkdir -p "memory"/{decisions,architecture,lessons,sessions,business,connections}
+mkdir -p ".claude/memory"/{decisions,architecture,lessons,sessions,business,connections}
 
-# Add memory/connections/ to .gitignore (never push connection info)
+# Add .claude/memory/connections/ to .gitignore (never push connection info)
 if [ -f ".gitignore" ]; then
-    if ! grep -q "memory/connections/" ".gitignore" 2>/dev/null; then
+    if ! grep -q ".claude/memory/connections/" ".gitignore" 2>/dev/null; then
         echo "" >> ".gitignore"
         echo "# AI Engineering OS — Database connections (schema only, no secrets)" >> ".gitignore"
-        echo "memory/connections/" >> ".gitignore"
-        echo -e "   ${GREEN}✓${NC} Added memory/connections/ to .gitignore"
+        echo ".claude/memory/connections/" >> ".gitignore"
+        echo -e "   ${GREEN}✓${NC} Added .claude/memory/connections/ to .gitignore"
     fi
 else
     echo "# AI Engineering OS — Database connections (schema only, no secrets)" > ".gitignore"
-    echo "memory/connections/" >> ".gitignore"
-    echo -e "   ${GREEN}✓${NC} Created .gitignore with memory/connections/ excluded"
+    echo ".claude/memory/connections/" >> ".gitignore"
+    echo -e "   ${GREEN}✓${NC} Created .gitignore with .claude/memory/connections/ excluded"
 fi
 
 download_file() {
@@ -157,12 +157,15 @@ echo "  │   ├── skills/                      ← Domain knowledge"
 echo "  │   ├── rules/                       ← Engineering rules"
 echo "  │   ├── templates/                   ← Memory templates"
 echo "  │   └── workflows/                   ← Workflow references"
-echo "  └── memory/                          ← YOUR project memory"
+echo "  └── .claude/memory/                  ← YOUR project memory (persists across sessions)"
+echo "      ├── INDEX.md                     ← Auto-maintained"
+echo "      ├── guidelines.md                ← Project structure & conventions"
 echo "      ├── decisions/"
 echo "      ├── architecture/"
 echo "      ├── lessons/"
 echo "      ├── sessions/"
-echo "      └── business/"
+echo "      ├── business/"
+echo "      └── connections/ (gitignored)"
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo "  Next steps:"
