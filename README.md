@@ -282,8 +282,9 @@ Caveman compresses AI agent output by eliminating filler while preserving every 
 | v0.1 | **Foundation** — Brain, agents, skills, workflow | ✅ Done |
 | v0.2 | **Agent Mesh** — message broker, agent-to-agent communication | ✅ Done |
 | v0.3 | **Rules + Install** — 6 rule files, .ai/ convention, setup.sh | ✅ Done |
-| v0.4 | **Skills expansion** — framework skills (Laravel, React, SQL) | 🔲 Planned |
-| v0.5 | **Memory enhancements** — querying, linking, lifecycle | 🔲 Planned |
+| v0.4 | **Skills expansion** — framework skills (Laravel, React, SQL) | ✅ Done |
+| v0.5 | **Caveman ULTRA** — 67% token compression, built into setup/update | ✅ Done |
+| v0.6 | **Memory enhancements** — querying, linking, lifecycle | 🔲 Planned |
 | v0.6 | **GitHub release workflow** — changelog, semantic versioning | 🔲 Planned |
 | v0.7 | **Templates expansion** — project scaffolding | 🔲 Planned |
 | v0.8 | **Install script improvements** — flags, customization | 🔲 Planned |
