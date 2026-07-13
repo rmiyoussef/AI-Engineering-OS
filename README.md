@@ -350,6 +350,7 @@ R29: Template-led testing. Templates are the source of truth.
 | v0.4 | **Skills expansion** — framework skills (Laravel, React, SQL) | ✅ Done |
 | v0.5 | **Caveman ULTRA** — 67% token compression, built into setup/update | ✅ Done |
 | v0.6 | **Super TESTER** — 5 testing modes, flow testing, templates | ✅ Done |
+| v0.7 | **Memory Summaries** — test + task summaries with team-ready templates | ✅ Done |
 | v0.7 | **Memory enhancements** — querying, linking, lifecycle | 🔲 Planned |
 | v0.8 | **GitHub release workflow** — changelog, semantic versioning | 🔲 Planned |
 | v0.9 | **Templates expansion** — project scaffolding | 🔲 Planned |
@@ -367,7 +368,7 @@ R29: Template-led testing. Templates are the source of truth.
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>AI Engineering OS — v0.5</small>
+    <small>AI Engineering OS — v0.7</small>
   </sub>
   <br>
 </div>

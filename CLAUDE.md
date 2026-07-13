@@ -1,7 +1,7 @@
 # AI Engineering OS — CLAUDE.md
 
 > **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
-> **Version:** v0.5 — Caveman ULTRA + Super TESTER
+> **Version:** v0.7 — Memory Summaries + Super TESTER
 
 ============================================================
 ## SYSTEM IDENTITY
@@ -422,12 +422,12 @@ Read `brain/MEMORY_SYSTEM.md` for full protocol.
 ## VERSION
 ============================================================
 
-AI Engineering OS v0.5 — Super TESTER + Caveman ULTRA
+AI Engineering OS v0.7 — Memory Summaries + Super TESTER
 15 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
            BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE,
            GITHUB, GITHUB TASKS, SUMMARY
 Memory system with INDEX.md, guidelines.md, connections/
-29 rules (R1-R29) including testing templates, flow testing
+29 rules (R1-R29) including testing templates, flow testing, memory summaries
 Testing templates in templates/testing/ — API, Flow, DB, Performance, Code Quality
 Zero slash commands needed — auto-detect and route
 Update: bash .ai/update.sh or ask me to update
