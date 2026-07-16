@@ -165,6 +165,8 @@ Every decision, lesson, test result, and task is saved to `.brain/` — a **team
 .brain/
 ├── INDEX.md                 ← Master index — start here
 ├── README.md                ← What .brain/ is
+├── agents/                  ← Agent definitions (ARCHITECT, PLANNER, etc.)
+├── brain/                   ← Core system files (MISSION, PRINCIPLES, RULES, SYSTEM)
 ├── memory/
 │   ├── guidelines.md        ← Architecture, conventions, stack
 │   ├── decisions/           ← Past architecture decisions
@@ -180,6 +182,9 @@ Every decision, lesson, test result, and task is saved to `.brain/` — a **team
 │   ├── resource.md          ← How to create API resources
 │   └── crud.md              ← Full CRUD generation
 ├── rules/                   ← Project conventions
+├── templates/
+│   ├── summary/             ← Summary templates
+│   └── testing/             ← Test templates
 └── connections/             ← DB schema (gitignored)
 ```
 
@@ -195,19 +200,19 @@ When installed, your project gets access to domain-agnostic engineering rules:
 
 | Rule File | Covers |
 |-----------|--------|
-| `rules/COMMIT_MESSAGES.md` | Conventional commit format, types, scopes |
-| `rules/ERROR_HANDLING.md` | Exceptions, logging, fail-fast, HTTP codes |
-| `rules/NAMING_CONVENTIONS.md` | Classes, methods, variables, tests naming |
-| `rules/SECURITY.md` | Input validation, SQL injection, XSS, CSRF, auth |
-| `rules/DATABASE.md` | Migrations, indexing, N+1, pagination, constraints |
-| `rules/API_DESIGN.md` | RESTful URLs, consistent responses, versioning |
+| `.brain/rules/COMMIT_MESSAGES.md` | Conventional commit format, types, scopes |
+| `.brain/rules/ERROR_HANDLING.md` | Exceptions, logging, fail-fast, HTTP codes |
+| `.brain/rules/NAMING_CONVENTIONS.md` | Classes, methods, variables, tests naming |
+| `.brain/rules/SECURITY.md` | Input validation, SQL injection, XSS, CSRF, auth |
+| `.brain/rules/DATABASE.md` | Migrations, indexing, N+1, pagination, constraints |
+| `.brain/rules/API_DESIGN.md` | RESTful URLs, consistent responses, versioning |
 
-| `rules/TESTING_RULES.md` | Writing tests — coverage, scenarios, templates |
+| `.brain/rules/TESTING_RULES.md` | Writing tests — coverage, scenarios, templates |
 
 | Template | When Used |
 |----------|-----------|
-| `templates/summary/TEST_SUMMARY.md` | Team-ready test summary (icons, tables, security, perf, DB) |
-| `templates/summary/TASK_SUMMARY.md` | Full task summary (files, tests, security, quality scores) |
+| `.brain/templates/summary/TEST_SUMMARY.md` | Team-ready test summary (icons, tables, security, perf, DB) |
+| `.brain/templates/summary/TASK_SUMMARY.md` | Full task summary (files, tests, security, quality scores) |
 | `.brain/skills/service.md` | Service class — structure, rules, transactions |
 | `.brain/skills/controller.md` | Controller — thin HTTP layer, action methods |
 | `.brain/skills/resource.md` | API Resource — response transformation, field filtering |
@@ -221,11 +226,11 @@ Rules are loaded automatically based on what the task touches.
 
 | Skill | When Used |
 |-------|-----------|
-| `skills/CODE_REVIEW.md` | Reviewing code |
-| `skills/TESTING.md` | Writing or reviewing tests |
-| `skills/GIT.md` | Committing, branching, PRs |
-| `skills/MEMORY.md` | Writing to project memory |
-| `skills/BACKEND_ENGINEERING.md` | Backend QA audit or query work |
+| `.brain/skills/CODE_REVIEW.md` | Reviewing code |
+| `.brain/skills/TESTING.md` | Writing or reviewing tests |
+| `.brain/skills/GIT.md` | Committing, branching, PRs |
+| `.brain/skills/MEMORY.md` | Writing to project memory |
+| `.brain/skills/BACKEND_ENGINEERING.md` | Backend QA audit or query work |
 
 ---
 
@@ -299,17 +304,17 @@ Caveman compresses AI agent output by eliminating filler while preserving every 
 
 ## Super TESTER — Comprehensive Testing
 
-TESTER agent now handles **5 testing modes** with reusable templates in `templates/testing/`.
+TESTER agent now handles **5 testing modes** with reusable templates in `.brain/templates/testing/`.
 
 ### Testing Modes
 
 | Mode | Template | What It Covers |
 |------|----------|----------------|
-| 🅰️ **API** | `templates/testing/API_ENDPOINT.md` | 15+ scenarios: happy path, validation, auth, edge cases |
-| 🔗 **Flow** | `templates/testing/BUSINESS_FLOW.md` | Multi-step chained APIs (full flow + per-step auth) |
-| 🗄️ **Database** | `templates/testing/DATABASE_QUERY.md` | N+1 detection, index checks, migration safety |
-| ⚡ **Performance** | `templates/testing/PERFORMANCE.md` | Response time benchmarks, query load tests |
-| 🧹 **Code Quality** | `templates/testing/CODE_QUALITY.md` | Naming, SOLID, method length, docblocks |
+| 🅰️ **API** | `.brain/templates/testing/API_ENDPOINT.md` | 15+ scenarios: happy path, validation, auth, edge cases |
+| 🔗 **Flow** | `.brain/templates/testing/BUSINESS_FLOW.md` | Multi-step chained APIs (full flow + per-step auth) |
+| 🗄️ **Database** | `.brain/templates/testing/DATABASE_QUERY.md` | N+1 detection, index checks, migration safety |
+| ⚡ **Performance** | `.brain/templates/testing/PERFORMANCE.md` | Response time benchmarks, query load tests |
+| 🧹 **Code Quality** | `.brain/templates/testing/CODE_QUALITY.md` | Naming, SOLID, method length, docblocks |
 
 ### API Coverage (Per Endpoint)
 
@@ -338,7 +343,7 @@ Each flow tested: **full flow**, **partial failures**, **auth at every step**, *
 
 ### Template System
 
-- **"Create template for onboarding"** — writes to `templates/testing/onboarding.md`
+- **"Create template for onboarding"** — writes to `.brain/templates/testing/onboarding.md`
 - **"Test onboarding"** — checks templates, generates tests from existing template
 - **"I need test {xyz}"** — if no template exists, TESTER asks to create one first
 
@@ -378,7 +383,7 @@ R29: Template-led testing. Templates are the source of truth.
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>AI Engineering OS — v1.0</small>
+    <small>AI Engineering OS — v1.1</small>
   </sub>
   <br>
 </div>

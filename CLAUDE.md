@@ -1,7 +1,7 @@
 # AI Engineering OS — CLAUDE.md
 
 > **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
-> **Version:** v1.0 — .brain/ Project Brain + Skills + Memory
+> **Version:** v1.1 — .brain/ Full Restructure (agents, rules, brain, templates under .brain/)
 
 ============================================================
 ## SYSTEM IDENTITY
@@ -60,7 +60,7 @@ They talk to each other. You facilitate. No commands needed.
 **R2** — Review before accepting. Every code change must be reviewed.
 **R3** — Everything is tested. Every change includes or updates tests. If a task has no tests, TESTER asks user to create test template.
 **R4** — Write memory after every session. Decisions, lessons, architecture changes.
-**R5** — No project-specific content in OS files. That belongs in `memory/`.
+**R5** — No project-specific content in OS files. That belongs in `.brain/memory/`.
 **R6** — Structured output only. Agents return defined schemas.
 **R7** — No circular delegation. Agents cannot call themselves.
 **R8** — Read memory before writing. Past decisions inform current work.
@@ -72,10 +72,10 @@ They talk to each other. You facilitate. No commands needed.
 **R14** — **Escalate after 3 failures.** Don't keep trying the same approach.
 **R15** — **One message at a time.** No parallel conversations per agent.
 **R16** — **Message protocol compliance.** Every message must follow the schema.
-**R17** — **Always read guidelines first.** Read `memory/guidelines.md` before every task.
-**R18** — **Always read memory before writing.** Check INDEX.md, decisions, lessons.
-**R19** — **Update guidelines when architecture changes.** Keep `memory/guidelines.md` current.
-**R20** — **Never push connection info to Git.** `memory/connections/` is gitignored.
+**R17** — **Always read guidelines first.** Read `.brain/memory/guidelines.md` before every task.
+**R18** — **Always read memory before writing.** Check `.brain/memory/INDEX.md`, `.brain/memory/decisions/`, `.brain/memory/lessons/`.
+**R19** — **Update guidelines when architecture changes.** Keep `.brain/memory/guidelines.md` current.
+**R20** — **Never push connection info to Git.** `.brain/memory/connections/` is gitignored.
 **R21** — **Always ask before database changes, file deletions, file modifications, or running commands.** Show a full approval box with database actions, commands, files to change, and risks. Wait for explicit yes/no.
 **R22** — **Read-only tasks don't need approval.** Only mutations (database, files, commands).
 **R23** — **Repeat approval if context changes.** If the plan changes significantly after approval, ask again.
@@ -83,8 +83,8 @@ They talk to each other. You facilitate. No commands needed.
 **R25** — **Never run full test suite without asking.** Create specific tests for the task. Run only new tests. Full suite requires approval.
 **R26** — **Clear variable and input names.** No single-letter names. `$userId` not `$id`, `$orderStatus` not `$s`. Self-documenting code only.
 **R27** — **Refactoring requires approval.** Flag refactoring needs separately. Don't fix unrelated code without asking.
-**R28** — **Every task includes tests.** If no tests exist for the feature, TESTER asks "Create template for this?" before generating. Business flows use `templates/testing/` templates.
-**R29** — **Template-led testing.** `templates/testing/` is the source of truth for test structure. User says "create template for X" → write to templates. User says "test X" → use existing template.
+**R28** — **Every task includes tests.** If no tests exist for the feature, TESTER asks "Create template for this?" before generating. Business flows use `.brain/templates/testing/` templates.
+**R29** — **Template-led testing.** `.brain/templates/testing/` is the source of truth for test structure. User says "create template for X" → write to templates. User says "test X" → use existing template.
 **R30** — **Version bump before every push.** Update VERSION, CLAUDE.md header + footer, and README.md before every `git push`. All files must show the same version.
 **R31** — **Always write summaries.** Every task, test, or discussion writes a summary to `.brain/tasks/` or `.brain/tests/`. If user asks for a summary and none exists — create it before responding. Summaries are team-readable with tables, icons, security, perf, DB, clean code.
 
@@ -140,30 +140,30 @@ The agents handle the rest.
 Every request starts here:
 
 ```
-[1] Load brain/MISSION.md, PRINCIPLES.md, RULES.md, LIMITATIONS.md, SYSTEM.md
+[1] Load .brain/brain/MISSION.md, PRINCIPLES.md, RULES.md, LIMITATIONS.md, SYSTEM.md
     |
-[2] Read memory/INDEX.md          ← What does the project know?
+[2] Read .brain/memory/INDEX.md          ← What does the project know?
     |   (if missing, will be created after first session)
     |
-[3] Read memory/guidelines.md     ← Project conventions & structure
+[3] Read .brain/memory/guidelines.md     ← Project conventions & structure
     |   (if missing → call ARCHITECT to analyze project and create it)
     |
-[4] Read memory/decisions/        ← Past decisions about this area
+[4] Read .brain/memory/decisions/        ← Past decisions about this area
     |
-[5] Read memory/architecture/     ← Current system map
+[5] Read .brain/memory/architecture/     ← Current system map
     |
-[6] Read memory/lessons/          ← Known pitfalls
+[6] Read .brain/memory/lessons/          ← Known pitfalls
     |
 [7] If task involves database:
-    |   ├─► Read memory/connections/database.md
+    |   ├─► Read .brain/memory/connections/database.md
     |   └─► Call DATABASE agent for schema context
     |
 [8] If task involves security:
     |   └─► Call SECURITY agent for threat assessment
     |
 [9] If task involves testing:
-    |   ├─► Read `templates/testing/` for existing test templates
-    |   ├─► Read `rules/TESTING_RULES.md` for coverage rules
+    |   ├─► Read `.brain/templates/testing/` for existing test templates
+    |   ├─► Read `.brain/rules/TESTING_RULES.md` for coverage rules
     |   └─► Route to TESTER agent
     |
 [10] Route to appropriate agent based on task type
@@ -174,14 +174,14 @@ Every request starts here:
 ============================================================
 
 ### Phase 0: Project Analysis (ARCHITECT leads)
-If `memory/guidelines.md` is missing, ARCHITECT analyzes the project:
+If `.brain/memory/guidelines.md` is missing, ARCHITECT analyzes the project:
 - Reads directory structure, configs, existing patterns
 - Identifies architecture pattern, custom commands, middleware
 - Identifies database schema (via DATABASE agent)
-- Creates `memory/guidelines.md`
-- Creates `memory/connections/database.md` (gitignored)
+- Creates `.brain/memory/guidelines.md`
+- Creates `.brain/memory/connections/database.md` (gitignored)
 
-Read `agents/ARCHITECT.md` for the full schema.
+Read `.brain/agents/ARCHITECT.md` for the full schema.
 
 ### Phase 1: Planning (PLANNER leads)
 - Call ARCHIVIST for architecture understanding
@@ -193,16 +193,16 @@ Read `agents/ARCHITECT.md` for the full schema.
 - Present to user for approval
 - Write decision to memory
 
-Read `agents/PLANNER.md` for the full schema.
+Read `.brain/agents/PLANNER.md` for the full schema.
 
 ### Phase 2: Database (DATABASE leads, if needed)
 - Review schema design and migrations
-- Check connection info (stored in `memory/connections/`)
+- Check connection info (stored in `.brain/memory/connections/`)
 - Analyze queries for missing indexes
 - Flag migration safety issues
-- Update `memory/connections/database.md` (schema only, no secrets)
+- Update `.brain/memory/connections/database.md` (schema only, no secrets)
 
-Read `agents/DATABASE.md` for the full schema.
+Read `.brain/agents/DATABASE.md` for the full schema.
 
 ### Phase 3: Security (SECURITY leads, if needed)
 - OWASP Top 10 scan
@@ -211,7 +211,7 @@ Read `agents/DATABASE.md` for the full schema.
 - Data exposure analysis
 - CVSS scoring for every vulnerability
 
-Read `agents/SECURITY.md` for the full schema.
+Read `.brain/agents/SECURITY.md` for the full schema.
 
 ### Phase 4: Execution (EXECUTOR leads)
 - Write code following the plan
@@ -223,7 +223,7 @@ Read `agents/SECURITY.md` for the full schema.
 - Call TESTER for test generation
 - Report changed files
 
-Read `agents/EXECUTOR.md` for the full schema.
+Read `.brain/agents/EXECUTOR.md` for the full schema.
 
 ### Phase 5: Backend QA (BACKEND QA leads)
 - Clean code audit → delegate to CLEAN CODE if fails
@@ -231,7 +231,7 @@ Read `agents/EXECUTOR.md` for the full schema.
 - Security audit → delegate to SECURITY if needed
 - Testing audit → delegate to TESTER if coverage missing
 
-Read `agents/BACKEND.md` for the full schema.
+Read `.brain/agents/BACKEND.md` for the full schema.
 
 ### Phase 6: Review (REVIEWER leads)
 - Score code 1-10
@@ -242,10 +242,10 @@ Read `agents/BACKEND.md` for the full schema.
 - Call CLEAN CODE for violations
 - If score < 7: fix loop (max 3 iterations)
 
-Read `agents/REVIEWER.md` for the full schema.
+Read `.brain/agents/REVIEWER.md` for the full schema.
 
 ### Phase 7: Testing (TESTER leads)
-- Read `templates/testing/` for test templates
+- Read `.brain/templates/testing/` for test templates
 - 5 testing modes: API, Flow, Database, Performance, Code Quality
 - Run existing tests
 - Generate missing tests using template structure
@@ -255,21 +255,21 @@ Read `agents/REVIEWER.md` for the full schema.
 - If tests fail: route to EXECUTOR
 - If no template exists for feature: ask user "Create template first?"
 
-Read `agents/TESTER.md` for the full schema.
+Read `.brain/agents/TESTER.md` for the full schema.
 
 ### Phase 8: Memory & Guidelines Update (MEMORY SCRIBE + ARCHITECT)
 - MEMORY SCRIBE writes decisions, lessons, sessions, architecture
 - ARCHITECT updates guidelines.md if architecture changed
 - MEMORY SCRIBE updates INDEX.md with new entries
 
-Read `agents/MEMORY.md` and `agents/ARCHITECT.md` for schemas.
+Read `.brain/agents/MEMORY.md` and `.brain/agents/ARCHITECT.md` for schemas.
 
 ### Phase 9: GitHub (GITHUB leads, if requested)
 - Create branch with conventional naming
 - Commit with structured messages
 - Open PR with full body
 
-Read `agents/GITHUB.md` for the full schema.
+Read `.brain/agents/GITHUB.md` for the full schema.
 
 ### Phase 0: GitHub Tasks (GITHUB TASKS leads, on demand)
 When user says "Give me list building tasks" or "Fix task #1234":
@@ -284,7 +284,7 @@ When user says "Give me list building tasks" or "Fix task #1234":
 - Waits for explicit "Push task X to staging" to merge into staging branch
 - Always uses `staging/<module>/<name>` task branches, deletes after merge
 
-Read `agents/GITHUB_TASKS.md` for the full schema.
+Read `.brain/agents/GITHUB_TASKS.md` for the full schema.
 
 ### Phase 10: SUMMARY Agent (professional documentation)
 After task completion, SUMMARY agent produces:
@@ -294,7 +294,7 @@ After task completion, SUMMARY agent produces:
 - Code quality and naming scores
 - Project learning summary (guidelines updates, decisions, lessons)
 
-Read `agents/SUMMARY.md` for the full schema.
+Read `.brain/agents/SUMMARY.md` for the full schema.
 
 ### Phase 11: Respond
 - Summarize what was done
@@ -332,21 +332,21 @@ REVIEWER score < 7
 
 | Agent | Role | Reads |
 |-------|------|-------|
-| **ARCHITECT** | System architect — guidelines, patterns, consistency | `agents/ARCHITECT.md` |
-| **PLANNER** | Designer — produces structured plans | `agents/PLANNER.md` |
-| **ARCHIVIST** | Librarian — reads files, answers questions | `agents/ARCHIVIST.md` |
-| **DATABASE** | DB specialist — schema, queries, connections | `agents/DATABASE.md` |
-| **SECURITY** | Security auditor — OWASP, CVSS, exploit scenarios | `agents/SECURITY.md` |
-| **EXECUTOR** | Builder — writes the code | `agents/EXECUTOR.md` |
-| **BACKEND QA** | Backend auditor — clean code, queries, tests | `agents/BACKEND.md` |
-| **CLEAN CODE** | Refactorer — SOLID, naming, duplication | `agents/CLEAN_CODE.md` |
-| **TESTER** | Test specialist — APIs, flows, DB, performance, code quality | `agents/TESTER.md`, `rules/TESTING_RULES.md` |
-| **REVIEWER** | Inspector — scores code 1-10, manages fix loop | `agents/REVIEWER.md` |
-| **MEMORY SCRIBE** | Historian — persists decisions, lessons, index | `agents/MEMORY.md` |
-| **GITHUB** | Integrator — branches, commits, PRs | `agents/GITHUB.md` |
-| **GITHUB TASKS** | GitHub task manager — fetches issues, analyzes, plans, manages delivery | `agents/GITHUB_TASKS.md` |
-| **SUMMARY** | Documentation specialist — professional summaries, tables, metrics | `agents/SUMMARY.md` |
-| **BRAIN (you)** | Message broker — routes, validates, persists | `brain/SYSTEM.md` |
+| **ARCHITECT** | System architect — guidelines, patterns, consistency | `.brain/agents/ARCHITECT.md` |
+| **PLANNER** | Designer — produces structured plans | `.brain/agents/PLANNER.md` |
+| **ARCHIVIST** | Librarian — reads files, answers questions | `.brain/agents/ARCHIVIST.md` |
+| **DATABASE** | DB specialist — schema, queries, connections | `.brain/agents/DATABASE.md` |
+| **SECURITY** | Security auditor — OWASP, CVSS, exploit scenarios | `.brain/agents/SECURITY.md` |
+| **EXECUTOR** | Builder — writes the code | `.brain/agents/EXECUTOR.md` |
+| **BACKEND QA** | Backend auditor — clean code, queries, tests | `.brain/agents/BACKEND.md` |
+| **CLEAN CODE** | Refactorer — SOLID, naming, duplication | `.brain/agents/CLEAN_CODE.md` |
+| **TESTER** | Test specialist — APIs, flows, DB, performance, code quality | `.brain/agents/TESTER.md`, `.brain/rules/TESTING_RULES.md` |
+| **REVIEWER** | Inspector — scores code 1-10, manages fix loop | `.brain/agents/REVIEWER.md` |
+| **MEMORY SCRIBE** | Historian — persists decisions, lessons, index | `.brain/agents/MEMORY.md` |
+| **GITHUB** | Integrator — branches, commits, PRs | `.brain/agents/GITHUB.md` |
+| **GITHUB TASKS** | GitHub task manager — fetches issues, analyzes, plans, manages delivery | `.brain/agents/GITHUB_TASKS.md` |
+| **SUMMARY** | Documentation specialist — professional summaries, tables, metrics | `.brain/agents/SUMMARY.md` |
+| **BRAIN (you)** | Message broker — routes, validates, persists | `.brain/brain/SYSTEM.md` |
 
 ============================================================
 ## MEMORY SYSTEM
@@ -361,6 +361,8 @@ Memory is the project's persistent knowledge. It grows with every session.
 .brain/
 ├── INDEX.md                  ← Master index (auto-maintained)
 ├── README.md                 ← What .brain/ is
+├── agents/                   ← Agent definitions (ARCHITECT, PLANNER, etc.)
+├── brain/                    ← Core system files (MISSION, PRINCIPLES, RULES, SYSTEM)
 ├── memory/
 │   ├── guidelines.md         ← Project structure & conventions
 │   ├── decisions/            ← Architecture decisions
@@ -376,26 +378,30 @@ Memory is the project's persistent knowledge. It grows with every session.
 │   ├── resource.md           ← How to create API resources
 │   └── crud.md               ← Full CRUD generation
 ├── rules/                    ← Project conventions
+├── templates/
+│   ├── summary/              ← Summary templates
+│   └── testing/              ← Test templates
 └── connections/              ← Database connections (gitignored!)
 ```
 
 ### Git Safety
-- `.brain/decisions/`, `.brain/architecture/`, `.brain/lessons/`,
-  `.brain/sessions/`, `.brain/business/`, `.brain/tests/`, `.brain/tasks/`,
-  `.brain/skills/`, `.brain/rules/`, `.brain/guidelines.md`, `.brain/INDEX.md` — **committed**
+- `.brain/agents/`, `.brain/brain/`, `.brain/decisions/`, `.brain/architecture/`,
+  `.brain/lessons/`, `.brain/sessions/`, `.brain/business/`, `.brain/tests/`,
+  `.brain/tasks/`, `.brain/skills/`, `.brain/rules/`, `.brain/templates/`,
+  `.brain/memory/guidelines.md`, `.brain/memory/INDEX.md` — **committed**
 - `.brain/connections/` — **gitignored** (schema data)
 
 ### Memory Flow
-**Before work:** Read INDEX.md → guidelines.md → decisions/ → architecture/ → lessons/ → tests/ → tasks/
+**Before work:** Read `.brain/memory/INDEX.md` → `.brain/memory/guidelines.md` → `.brain/memory/decisions/` → `.brain/memory/architecture/` → `.brain/memory/lessons/` → `.brain/memory/tests/` → `.brain/memory/tasks/`
 **After work:** MEMORY SCRIBE writes decisions/lessons/sessions/tests/tasks, ARCHITECT updates guidelines, MEMORY SCRIBE updates INDEX.md
 
 **Always write summaries:**
-- After testing → `.brain/tests/{{YYYY-MM-DD}}-{{feature}}.md` (use `templates/summary/TEST_SUMMARY.md`)
-- After task → `.brain/tasks/{{YYYY-MM-DD}}-{{task-slug}}.md` (use `templates/summary/TASK_SUMMARY.md`)
+- After testing → `.brain/memory/tests/{{YYYY-MM-DD}}-{{feature}}.md` (use `.brain/templates/summary/TEST_SUMMARY.md`)
+- After task → `.brain/memory/tasks/{{YYYY-MM-DD}}-{{task-slug}}.md` (use `.brain/templates/summary/TASK_SUMMARY.md`)
 - If user asks for summary and none exists → create it before responding
 - These are team-ready: tables, icons, security, perf, DB, clean code, optimizations
 
-Read `brain/MEMORY_SYSTEM.md` for full protocol.
+Read `.brain/brain/MEMORY_SYSTEM.md` for full protocol.
 
 ============================================================
 ## RULES DIRECTORY
@@ -403,14 +409,14 @@ Read `brain/MEMORY_SYSTEM.md` for full protocol.
 
 | Rule File | When to Load |
 |-----------|-------------|
-| `rules/COMMIT_MESSAGES.md` | Writing commits or PRs |
-| `rules/ERROR_HANDLING.md` | Exceptions, error responses, logging |
-| `rules/NAMING_CONVENTIONS.md` | Naming classes, methods, variables |
-| `rules/SECURITY.md` | User input, auth, data exposure |
-| `rules/DATABASE.md` | Migrations, queries, schema design |
-| `rules/API_DESIGN.md` | Building or modifying API endpoints |
-| `rules/GIT_SAFETY.md` | Never push secrets, connections, .env |
-| `rules/TESTING_RULES.md` | Writing tests — coverage, scenarios, templates |
+| `.brain/rules/COMMIT_MESSAGES.md` | Writing commits or PRs |
+| `.brain/rules/ERROR_HANDLING.md` | Exceptions, error responses, logging |
+| `.brain/rules/NAMING_CONVENTIONS.md` | Naming classes, methods, variables |
+| `.brain/rules/SECURITY.md` | User input, auth, data exposure |
+| `.brain/rules/DATABASE.md` | Migrations, queries, schema design |
+| `.brain/rules/API_DESIGN.md` | Building or modifying API endpoints |
+| `.brain/rules/GIT_SAFETY.md` | Never push secrets, connections, .env |
+| `.brain/rules/TESTING_RULES.md` | Writing tests — coverage, scenarios, templates |
 
 ============================================================
 ## SKILLS
@@ -418,11 +424,11 @@ Read `brain/MEMORY_SYSTEM.md` for full protocol.
 
 | Skill | Load When |
 |-------|-----------|
-| `skills/CODE_REVIEW.md` | Reviewing code |
-| `skills/TESTING.md` | Writing or reviewing tests |
-| `skills/GIT.md` | Committing, branching, PRs |
-| `skills/MEMORY.md` | Writing to project memory |
-| `skills/BACKEND_ENGINEERING.md` | Backend QA or query work |
+| `.brain/skills/CODE_REVIEW.md` | Reviewing code |
+| `.brain/skills/TESTING.md` | Writing or reviewing tests |
+| `.brain/skills/GIT.md` | Committing, branching, PRs |
+| `.brain/skills/MEMORY.md` | Writing to project memory |
+| `.brain/skills/BACKEND_ENGINEERING.md` | Backend QA or query work |
 
 ============================================================
 ## ERROR HANDLING
@@ -442,13 +448,13 @@ Read `brain/MEMORY_SYSTEM.md` for full protocol.
 ## VERSION
 ============================================================
 
-AI Engineering OS v1.0 — .brain/ Project Brain + Skills + Memory
+AI Engineering OS v1.1 — .brain/ Full Restructure (agents, rules, brain, templates under .brain/)
 15 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
            BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE,
            GITHUB, GITHUB TASKS, SUMMARY
 Memory system in .brain/ — AI-tool agnostic, team-wide, auto-summarized
 31 rules (R1-R31) including testing templates, flow testing, version bump, summary force
-Testing templates in templates/testing/ — API, Flow, DB, Performance, Code Quality
+Testing templates in .brain/templates/testing/ — API, Flow, DB, Performance, Code Quality
 Project skills in .brain/skills/ — service, controller, resource, crud
 Zero slash commands needed — auto-detect and route
 Update: bash .ai/update.sh or ask me to update
