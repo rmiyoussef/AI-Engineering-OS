@@ -2,6 +2,7 @@
 #
 # RAI-Engineering — Update Script
 # Updates the AI Brain in your project to the latest version from GitHub.
+# Automatically migrates old nested .brain/ structure to flat format.
 #
 # Usage:
 #   bash .ai/update.sh
@@ -55,99 +56,223 @@ elif [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
     NEEDS_UPDATE=true
 fi
 
-if [ "$NEEDS_UPDATE" = false ]; then
-    echo -e "   ${GREEN}Already at latest version: $CURRENT_VERSION${NC}"
+# ── STRUCTURE MIGRATION: Detect old nested .brain/{domain}/{project-name}/ ──
+# In v1.4+, the structure was flattened from .brain/{domain}/{project-name}/ to .brain/{domain}/
+MIGRATION_NEEDED=false
+MIGRATION_DOMAINS=()
+
+detect_nested_structure() {
+    local domain="$1"
+    # Look for subdirectories inside .brain/{domain}/ that match old project-name pattern
+    if [ -d ".brain/${domain}" ]; then
+        for subdir in ".brain/${domain}"/*/; do
+            subname=$(basename "$subdir")
+            # Skip known flat-structure directories
+            if [ "$subname" != "memory" ] && [ "$subname" != "rules" ] && [ "$subname" != "skills" ] && [ "$subname" != "plans" ] && [ "$subname" != "connections" ] && [ "$subname" != "README.md" ]; then
+                # Check if this looks like an old nested project folder (has memory/, rules/, etc.)
+                if [ -d "${subdir}memory" ] || [ -d "${subdir}rules" ] || [ -d "${subdir}skills" ]; then
+                    MIGRATION_NEEDED=true
+                    MIGRATION_DOMAINS+=("${domain}/${subname}")
+                fi
+            fi
+        done
+    fi
+}
+
+detect_nested_structure "backend"
+detect_nested_structure "frontend"
+detect_nested_structure "mobile-ios"
+detect_nested_structure "mobile-android"
+detect_nested_structure "devops"
+
+if [ "$MIGRATION_NEEDED" = true ]; then
     echo ""
-    # Still run caveman install (new config/files may be missing from older installs)
-    echo -e "   Checking caveman install..."
-else
-    # Confirm with user
-    echo -e "   ${YELLOW}This will update .ai/ files. Your .brain/ directory will NOT be touched.${NC}"
-    echo -e "   ${YELLOW}Existing .ai/ files will be overwritten.${NC}"
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${YELLOW}  Structure Migration Available${NC}"
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
-    echo -e "   ${CYAN}Note:${NC} If upgrading from v1.2 or earlier, your .brain/ may need"
-    echo -e "   ${CYAN}      migration to the domain-isolated structure.${NC}"
-    echo -e "   ${CYAN}      Run 'bash .ai/setup.sh --migrate' after update if needed.${NC}"
+    echo -e "   RAI-Engineering v1.4+ uses ${GREEN}flat${NC} domain structure:"
+    echo -e "   ${CYAN}.brain/backend/memory/${NC} instead of ${RED}.brain/backend/project-name/memory/${NC}"
     echo ""
-    read -rp "   Proceed with update? (y/N): " CONFIRM
+    echo -e "   Old nested folders found:"
+    for folder in "${MIGRATION_DOMAINS[@]}"; do
+        echo -e "     ${YELLOW}📁 .brain/${folder}/${NC}"
+    done
+    echo ""
+    echo -e "   The update will ${GREEN}auto-migrate${NC} these to flat structure."
+    echo -e "   All your memory, decisions, rules, and skills will be preserved."
+    echo ""
+
+    # Only prompt if we also need version update
+    if [ "$NEEDS_UPDATE" = true ]; then
+        read -rp "   Proceed with update + migration? (y/N): " CONFIRM
+    else
+        read -rp "   Proceed with migration only? (y/N): " CONFIRM
+    fi
+
     if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
-        echo -e "   ${RED}Update cancelled.${NC}"
-        exit 0
+        echo -e "   ${RED}Migration cancelled.${NC}"
+        echo -e "   ${YELLOW}You can migrate manually:${NC}"
+        echo "   for domain in backend frontend devops mobile-ios mobile-android; do"
+        echo "     for sub in \$(ls .brain/\$domain/); do"
+        echo "       if [ \"\$sub\" != \"README.md\" ]; then"
+        echo "         for item in memory rules skills plans connections; do"
+        echo "           [ -d \".brain/\$domain/\$sub/\$item\" ] && mv \".brain/\$domain/\$sub/\$item\" \".brain/\$domain/\$item\""
+        echo "         done"
+        echo "         rmdir \".brain/\$domain/\$sub\" 2>/dev/null || true"
+        echo "       fi"
+        echo "     done"
+        echo "   done"
+        echo ""
+        # Still proceed with update if needed
+        if [ "$NEEDS_UPDATE" = false ]; then
+            exit 0
+        fi
+    else
+        # ── Run migration ──
+        echo ""
+        echo -e "   ${CYAN}●  Migrating .brain/ to flat structure...${NC}"
+        for entry in "${MIGRATION_DOMAINS[@]}"; do
+            domain=$(dirname "$entry")
+            project=$(basename "$entry")
+            old_path=".brain/${domain}/${project}"
+            echo -e "   ${CYAN}   Migrating .brain/${domain}/${project}/ → .brain/${domain}/${NC}"
+
+            for item in memory rules skills plans connections; do
+                if [ -d "${old_path}/${item}" ]; then
+                    # Check if target already has content — merge if so
+                    if [ -d ".brain/${domain}/${item}" ] && [ "$(ls -A ".brain/${domain}/${item}" 2>/dev/null)" ]; then
+                        echo -e "   ${YELLOW}   Merging ${item}/ into existing target...${NC}"
+                        cp -r "${old_path}/${item}/" ".brain/${domain}/${item}/"
+                    else
+                        mv "${old_path}/${item}" ".brain/${domain}/${item}"
+                    fi
+                fi
+            done
+
+            # Remove old project folder if empty
+            rmdir "$old_path" 2>/dev/null || true
+
+            # Update domain README if exists
+            if [ -f ".brain/${domain}/README.md" ]; then
+                echo -e "   ${GREEN}✓${NC} .brain/${domain}/ migrated"
+            fi
+        done
+
+        # ── Update .gitignore patterns ──
+        if [ -f ".gitignore" ]; then
+            if grep -q "brain/\\*/\\*/connections" ".gitignore" 2>/dev/null; then
+                echo -e "   ${CYAN}   Updating .gitignore patterns to flat structure...${NC}"
+                # Replace old wildcard patterns with explicit flat paths
+                sed -i 's|\.brain/\*/\*/connections/|.brain/backend/connections/\n.brain/frontend/connections/\n.brain/mobile-ios/connections/\n.brain/mobile-android/connections/\n.brain/devops/connections/|g' ".gitignore"
+                # Remove duplicate lines if any
+                awk '!seen[$0]++' ".gitignore" > ".gitignore.tmp" && mv ".gitignore.tmp" ".gitignore"
+                echo -e "   ${GREEN}✓${NC} .gitignore updated"
+            fi
+        fi
+
+        echo -e "   ${GREEN}✓${NC} Structure migration complete!"
+        echo ""
     fi
 fi
 
+# ── VERSION UPDATE ──
 if [ "$NEEDS_UPDATE" = true ]; then
-echo ""
-echo -e "📦 Updating AI Brain in ${CYAN}$AI_DIR/${NC}..."
-echo ""
+    # Confirm with user
+    if [ "$MIGRATION_NEEDED" = false ]; then
+        echo -e "   ${YELLOW}This will update .ai/ files. Your .brain/ directory will NOT be touched.${NC}"
+        echo -e "   ${YELLOW}Existing .ai/ files will be overwritten.${NC}"
+        echo ""
+        read -rp "   Proceed with update? (y/N): " CONFIRM
+        if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
+            echo -e "   ${RED}Update cancelled.${NC}"
+            exit 0
+        fi
+    fi
 
-download_file() {
-    local src="$1"
-    local dest="$2"
-    curl -fsSL "https://raw.githubusercontent.com/$REPO/$BRANCH/$src" -o "$dest"
-}
+    echo ""
+    echo -e "📦 Updating AI Brain in ${CYAN}$AI_DIR/${NC}..."
+    echo ""
 
-# Backup current VERSION if exists
-if [ -f "$AI_DIR/VERSION" ]; then
-    cp "$AI_DIR/VERSION" "$AI_DIR/VERSION.bak"
-fi
+    download_file() {
+        local src="$1"
+        local dest="$2"
+        curl -fsSL "https://raw.githubusercontent.com/$REPO/$BRANCH/$src" -o "$dest"
+    }
 
-echo -e "   ├── Updating brain..."
-download_file "brain/SYSTEM.md"   "$AI_DIR/brain/SYSTEM.md"
-download_file "brain/MISSION.md"   "$AI_DIR/brain/MISSION.md"
-download_file "brain/PRINCIPLES.md"   "$AI_DIR/brain/PRINCIPLES.md"
-download_file "brain/LIMITATIONS.md"   "$AI_DIR/brain/LIMITATIONS.md"
-download_file "brain/RULES.md"   "$AI_DIR/brain/RULES.md"
-download_file "brain/MEMORY_SYSTEM.md"   "$AI_DIR/brain/MEMORY_SYSTEM.md"
+    # Backup current VERSION if exists
+    if [ -f "$AI_DIR/VERSION" ]; then
+        cp "$AI_DIR/VERSION" "$AI_DIR/VERSION.bak"
+    fi
 
-echo -e "   ├── Updating agents..."
-download_file "agents/PLANNER.md"   "$AI_DIR/agents/PLANNER.md"
-download_file "agents/EXECUTOR.md"   "$AI_DIR/agents/EXECUTOR.md"
-download_file "agents/REVIEWER.md"   "$AI_DIR/agents/REVIEWER.md"
-download_file "agents/BACKEND.md"   "$AI_DIR/agents/BACKEND.md"
-download_file "agents/TESTER.md"   "$AI_DIR/agents/TESTER.md"
-download_file "agents/CLEAN_CODE.md"   "$AI_DIR/agents/CLEAN_CODE.md"
-download_file "agents/ARCHIVIST.md"   "$AI_DIR/agents/ARCHIVIST.md"
-download_file "agents/MEMORY.md"   "$AI_DIR/agents/MEMORY.md"
-download_file "agents/GITHUB.md"   "$AI_DIR/agents/GITHUB.md"
-download_file "agents/DATABASE.md"   "$AI_DIR/agents/DATABASE.md"
-download_file "agents/SECURITY.md"   "$AI_DIR/agents/SECURITY.md"
-download_file "agents/ARCHITECT.md"   "$AI_DIR/agents/ARCHITECT.md"
-download_file "agents/GITHUB_TASKS.md"   "$AI_DIR/agents/GITHUB_TASKS.md"
-download_file "agents/SUMMARY.md"   "$AI_DIR/agents/SUMMARY.md"
+    echo -e "   ├── Updating brain..."
+    download_file "brain/SYSTEM.md"          "$AI_DIR/brain/SYSTEM.md"
+    download_file "brain/MISSION.md"         "$AI_DIR/brain/MISSION.md"
+    download_file "brain/PRINCIPLES.md"      "$AI_DIR/brain/PRINCIPLES.md"
+    download_file "brain/LIMITATIONS.md"     "$AI_DIR/brain/LIMITATIONS.md"
+    download_file "brain/RULES.md"           "$AI_DIR/brain/RULES.md"
+    download_file "brain/MEMORY_SYSTEM.md"   "$AI_DIR/brain/MEMORY_SYSTEM.md"
+    download_file "brain/ORCHESTRATION.md"   "$AI_DIR/brain/ORCHESTRATION.md"
 
-echo -e "   ├── Updating skills..."
-download_file "skills/CODE_REVIEW.md"   "$AI_DIR/skills/CODE_REVIEW.md"
-download_file "skills/TESTING.md"   "$AI_DIR/skills/TESTING.md"
-download_file "skills/GIT.md"   "$AI_DIR/skills/GIT.md"
-download_file "skills/MEMORY.md"   "$AI_DIR/skills/MEMORY.md"
-download_file "skills/BACKEND_ENGINEERING.md"   "$AI_DIR/skills/BACKEND_ENGINEERING.md"
+    echo -e "   ├── Updating agents..."
+    download_file "agents/PLANNER.md"        "$AI_DIR/agents/PLANNER.md"
+    download_file "agents/EXECUTOR.md"       "$AI_DIR/agents/EXECUTOR.md"
+    download_file "agents/REVIEWER.md"       "$AI_DIR/agents/REVIEWER.md"
+    download_file "agents/BACKEND.md"        "$AI_DIR/agents/BACKEND.md"
+    download_file "agents/TESTER.md"         "$AI_DIR/agents/TESTER.md"
+    download_file "agents/CLEAN_CODE.md"     "$AI_DIR/agents/CLEAN_CODE.md"
+    download_file "agents/ARCHIVIST.md"      "$AI_DIR/agents/ARCHIVIST.md"
+    download_file "agents/MEMORY.md"         "$AI_DIR/agents/MEMORY.md"
+    download_file "agents/GITHUB.md"         "$AI_DIR/agents/GITHUB.md"
+    download_file "agents/DATABASE.md"       "$AI_DIR/agents/DATABASE.md"
+    download_file "agents/SECURITY.md"       "$AI_DIR/agents/SECURITY.md"
+    download_file "agents/ARCHITECT.md"      "$AI_DIR/agents/ARCHITECT.md"
+    download_file "agents/GITHUB_TASKS.md"   "$AI_DIR/agents/GITHUB_TASKS.md"
+    download_file "agents/SUMMARY.md"        "$AI_DIR/agents/SUMMARY.md"
+    download_file "agents/ORCHESTRATOR.md"   "$AI_DIR/agents/ORCHESTRATOR.md"
+    download_file "agents/ORCHESTRATOR_ENGINE.md" "$AI_DIR/agents/ORCHESTRATOR_ENGINE.md"
 
-echo -e "   ├── Updating rules..."
-download_file "rules/COMMIT_MESSAGES.md"   "$AI_DIR/rules/COMMIT_MESSAGES.md"
-download_file "rules/ERROR_HANDLING.md"   "$AI_DIR/rules/ERROR_HANDLING.md"
-download_file "rules/NAMING_CONVENTIONS.md"   "$AI_DIR/rules/NAMING_CONVENTIONS.md"
-download_file "rules/SECURITY.md"   "$AI_DIR/rules/SECURITY.md"
-download_file "rules/DATABASE.md"   "$AI_DIR/rules/DATABASE.md"
-download_file "rules/API_DESIGN.md"   "$AI_DIR/rules/API_DESIGN.md"
-download_file "rules/GIT_SAFETY.md"   "$AI_DIR/rules/GIT_SAFETY.md"
+    echo -e "   ├── Updating skills..."
+    download_file ".brain.skills/CODE_REVIEW.md"    "$AI_DIR/skills/CODE_REVIEW.md"
+    download_file ".brain.skills/TESTING.md"        "$AI_DIR/skills/TESTING.md"
+    download_file ".brain.skills/GIT.md"            "$AI_DIR/skills/GIT.md"
+    download_file ".brain.skills/MEMORY.md"         "$AI_DIR/skills/MEMORY.md"
+    download_file ".brain.skills/BACKEND_ENGINEERING.md" "$AI_DIR/skills/BACKEND_ENGINEERING.md"
 
-echo -e "   ├── Updating templates..."
-download_file "templates/MEMORY_DECISION.md"   "$AI_DIR/templates/MEMORY_DECISION.md"
-download_file "templates/GUIDELINES.md"   "$AI_DIR/templates/GUIDELINES.md"
+    echo -e "   ├── Updating rules..."
+    download_file ".brain.rules/COMMIT_MESSAGES.md" "$AI_DIR/rules/COMMIT_MESSAGES.md"
+    download_file ".brain.rules/ERROR_HANDLING.md"  "$AI_DIR/rules/ERROR_HANDLING.md"
+    download_file ".brain.rules/NAMING_CONVENTIONS.md" "$AI_DIR/rules/NAMING_CONVENTIONS.md"
+    download_file ".brain.rules/SECURITY.md"        "$AI_DIR/rules/SECURITY.md"
+    download_file ".brain.rules/DATABASE.md"        "$AI_DIR/rules/DATABASE.md"
+    download_file ".brain.rules/API_DESIGN.md"      "$AI_DIR/rules/API_DESIGN.md"
+    download_file ".brain.rules/GIT_SAFETY.md"      "$AI_DIR/rules/GIT_SAFETY.md"
 
-echo -e "   ├── Updating workflows..."
-download_file "workflows/STANDARD.md"   "$AI_DIR/workflows/STANDARD.md"
+    # Install orchestration rules to the first found .brain/{domain}/rules/
+    for domain_dir in .brain/backend .brain/frontend .brain/devops .brain/mobile-ios .brain/mobile-android; do
+        if [ -d "${domain_dir}/rules" ]; then
+            download_file ".brain/backend/rules/orchestration-rules.md" "${domain_dir}/rules/orchestration-rules.md" 2>/dev/null || true
+            echo -e "   ${GREEN}✓${NC} Installed orchestration rules to ${domain_dir}/rules/"
+            break
+        fi
+    done
 
-echo -e "   └── Updating CLAUDE.md..."
-download_file "CLAUDE.install.md"   "$AI_DIR/CLAUDE.md"
+    echo -e "   ├── Updating templates..."
+    download_file ".brain.templates/MEMORY_DECISION.md" "$AI_DIR/templates/MEMORY_DECISION.md"
+    download_file ".brain.templates/GUIDELINES.md"      "$AI_DIR/templates/GUIDELINES.md"
 
-# Update VERSION file
-if [ -n "$LATEST_VERSION" ]; then
-    echo "$LATEST_VERSION" > "$AI_DIR/VERSION"
-else
-    echo "updated-$(date +%Y%m%d)" > "$AI_DIR/VERSION"
-fi
+    echo -e "   ├── Updating workflows..."
+    download_file "workflows/STANDARD.md"    "$AI_DIR/workflows/STANDARD.md" 2>/dev/null || true
+
+    echo -e "   └── Updating CLAUDE.md..."
+    download_file "CLAUDE.install.md"        "$AI_DIR/CLAUDE.md"
+
+    # Update VERSION file
+    if [ -n "$LATEST_VERSION" ]; then
+        echo "$LATEST_VERSION" > "$AI_DIR/VERSION"
+    else
+        echo "updated-$(date +%Y%m%d)" > "$AI_DIR/VERSION"
+    fi
 fi
 
 # ── Caveman install (runs every update, even if version unchanged) ──
@@ -198,35 +323,44 @@ else
   echo -e "   ${YELLOW}⚠  Node ≥18 required for caveman plugin. Config files still updated.${NC}"
 fi
 
-# Exit if version already latest (only caveman needed)
+# Exit early if only caveman/migration was needed
 if [ "$NEEDS_UPDATE" = false ]; then
     echo ""
-    echo -e "${GREEN}✅  RAI-Engineering already at latest version. Caveman checked.${NC}"
+    echo -e "${GREEN}✅  RAI-Engineering up to date.${NC}"
+    if [ "$MIGRATION_NEEDED" = true ]; then
+        echo -e "   ${GREEN}  Structure migration applied.${NC}"
+    fi
     echo ""
     exit 0
 fi
 
 # ── Done ─────────────────────────────────────────────────────────
-if [ "$NEEDS_UPDATE" = true ]; then
-download_file "update.sh"   "$AI_DIR/update.sh"
+download_file "update.sh" "$AI_DIR/update.sh"
 chmod +x "$AI_DIR/update.sh"
 
 echo ""
-echo -e "${GREEN}✅  RAI-Engineering updated to v1.3 — Domain Isolation Protocol!${NC}"
+echo -e "${GREEN}✅  RAI-Engineering updated to v1.5 — Orchestration & Parallel Execution!${NC}"
 echo ""
 
 NEW_VERSION=$(cat "$AI_DIR/VERSION")
 echo -e "   Version: ${GREEN}$NEW_VERSION${NC}"
 echo ""
-echo -e "   ${CYAN}Changes:${NC}"
-echo -e "   - All project knowledge now domain-isolated under .brain/{domain}/{project}/"
-echo -e "   - 5 domain isolation rules (R36-R40) added"
-echo -e "   - Backend, Frontend, Mobile, DevOps knowledge never mixes"
+echo -e "   ${CYAN}New in v1.5:${NC}"
+echo -e "   - Orchestration Engine — parallel multi-domain task execution"
+echo -e "   - ORCHESTRATOR ENGINE agent — task decomposition, dispatch, relay, verify"
+echo -e "   - R41-R45 orchestration rules"
+echo -e "   - Flat .brain/{domain}/ structure (no project-name nesting)"
+echo -e "   - Inter-agent request relay protocol"
+echo -e "   - Autonomous completion loop (max 3 cycles)"
+echo -e "   - Conflict auto-resolution by project rules"
 echo ""
-echo -e "   ${YELLOW}Note:${NC} .ai/ files updated. Your .brain/ directory was NOT modified."
-echo -e "   ${YELLOW}      To migrate existing .brain/ to domain-isolated structure:${NC}"
-echo -e "   ${YELLOW}      git mv .brain/memory .brain/backend/{project}/memory/${NC}"
+if [ "$MIGRATION_NEEDED" = true ]; then
+    echo -e "   ${GREEN}✓ .brain/ structure migrated to flat format${NC}"
+fi
+echo -e "   ${YELLOW}Note:${NC} .ai/ files updated. Your .brain/ memory was NOT modified"
+echo -e "   ${YELLOW}      (except for the structural flattening if migration ran).${NC}"
+echo ""
+
 if [ -f "$AI_DIR/VERSION.bak" ]; then
     rm "$AI_DIR/VERSION.bak"
-fi
 fi

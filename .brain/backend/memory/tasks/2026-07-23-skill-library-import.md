@@ -17,8 +17,8 @@ Imported and adapted knowledge patterns from 6 external GitHub skill repositorie
 | Location | Count | Sources |
 |----------|-------|---------|
 | `.brain/shared/skills/` | 27 | addyosmani, mattpocock, obra |
-| `.brain/frontend/rai-engineering/skills/` | 6 | addyosmani, anthropics, emilkowalski |
-| `.brain/devops/rai-engineering/skills/` | 1 | addyosmani |
+| `.brain/frontend/skills/` | 6 | addyosmani, anthropics, emilkowalski |
+| `.brain/devops/skills/` | 1 | addyosmani |
 
 ### 🔄 4 Rule Files Merged & Upgraded
 

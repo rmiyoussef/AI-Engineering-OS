@@ -35,14 +35,14 @@ Knowledge is organized into **domain-isolated subtrees**. Each domain is self-co
 
 | Path | What It Tells the AI |
 |------|----------------------|
-| `{domain}/{project}/memory/guidelines.md` | Architecture, tech stack, conventions |
-| `{domain}/{project}/memory/decisions/` | Why past decisions were made |
-| `{domain}/{project}/memory/lessons/` | What went wrong and how to avoid it |
-| `{domain}/{project}/memory/tasks/` | What work was done and how |
-| `{domain}/{project}/memory/tests/` | Test results per feature |
-| `{domain}/{project}/skills/` | How to write code in this project |
-| `{domain}/{project}/rules/` | Project-specific conventions |
-| `{domain}/{project}/plans/` | Active and past plans |
+| `{domain}/memory/guidelines.md` | Architecture, tech stack, conventions |
+| `{domain}/memory/decisions/` | Why past decisions were made |
+| `{domain}/memory/lessons/` | What went wrong and how to avoid it |
+| `{domain}/memory/tasks/` | What work was done and how |
+| `{domain}/memory/tests/` | Test results per feature |
+| `{domain}/skills/` | How to write code in this project |
+| `{domain}/rules/` | Project-specific conventions |
+| `{domain}/plans/` | Active and past plans |
 
 ## For AI Tools
 
@@ -50,9 +50,9 @@ When you start working on this project:
 
 1. **Identify the domain** — Backend, Frontend, Mobile, or DevOps?
 2. **Read** `.brain/INDEX.md` — full map
-3. **Read** `.brain/{domain}/{project}/memory/guidelines.md` — architecture & conventions
-4. **Check** `.brain/{domain}/{project}/skills/` — code patterns
-5. **Check** `.brain/{domain}/{project}/plans/` — active plans
+3. **Read** `.brain/{domain}/memory/guidelines.md` — architecture & conventions
+4. **Check** `.brain/{domain}/skills/` — code patterns
+5. **Check** `.brain/{domain}/plans/` — active plans
 
 ## For Humans
 

@@ -6,9 +6,9 @@
 
 ---
 
-## Domain Isolation Structure
+## Domain-Isolated Structure
 
-RAI-Engineering organizes knowledge into **domain-isolated subtrees**. Each domain is self-contained.
+RAI-Engineering organizes knowledge into **domain-isolated subtrees**.
 
 ```
 .brain/
@@ -23,35 +23,36 @@ RAI-Engineering organizes knowledge into **domain-isolated subtrees**. Each doma
 │
 ├── backend/                              ← Backend domain
 │   ├── README.md
-│   └── rai-engineering/                  ← RAI-Engineering's own knowledge
-│       ├── memory/guidelines.md          ← Architecture, conventions, stack
-│       ├── memory/decisions/             ← Past architecture decisions
-│       ├── memory/architecture/          ← Component maps
-│       ├── memory/lessons/               ← Things learned
-│       ├── memory/sessions/              ← Every interaction logged
-│       ├── memory/tests/                 ← Test summaries per feature
-│       ├── memory/tasks/                 ← Task summaries with results
-│       ├── memory/business/              ← Business rules
-│       ├── rules/                        ← Project rules (V2: SECURITY, API_DESIGN, COMMIT_MESSAGES, GIT_SAFETY merged)
-│       ├── skills/                       ← Code templates & patterns
-│       ├── plans/                        ← Project plans
-│       └── connections/                  ← DB connections (gitignored)
+│   ├── memory/guidelines.md              ← Architecture, conventions, stack
+│   ├── memory/decisions/                 ← Past architecture decisions
+│   ├── memory/architecture/              ← Component maps
+│   ├── memory/lessons/                   ← Things learned
+│   ├── memory/sessions/                  ← Every interaction logged
+│   ├── memory/tests/                     ← Test summaries per feature
+│   ├── memory/tasks/                     ← Task summaries with results
+│   ├── memory/business/                  ← Business rules
+│   ├── rules/                            ← Project rules
+│   ├── skills/                           ← Code templates & patterns
+│   ├── plans/                            ← Project plans
+│   └── connections/                      ← DB connections (gitignored)
 │
-├── frontend/                             ← Frontend domain (NEW: 6 skills)
+├── frontend/                             ← Frontend domain
 │   ├── README.md
-│   └── rai-engineering/skills/           ← UI eng, design, devtools, animations
+│   └── skills/                           ← UI eng, design, devtools, animations
+│
 ├── mobile-ios/                           ← iOS domain (for future projects)
 ├── mobile-android/                       ← Android domain (for future projects)
-└── devops/                               ← DevOps domain (NEW: CI/CD skill)
+│
+└── devops/                               ← DevOps domain
     ├── README.md
-    └── rai-engineering/skills/           ← DevOps patterns
+    └── skills/                           ← DevOps patterns
 ```
 
 ---
 
 ## 🧩 Skills Library
 
-> Newly imported from 6 GitHub repos (mattpocock, anthropics, addyosmani, obra, emilkowalski, nextlevelbuilder). See `.brain/shared/skills/`, `.brain/frontend/rai-engineering/skills/`, and `.brain/devops/rai-engineering/skills/` for full files.
+> Newly imported from 6 GitHub repos (mattpocock, anthropics, addyosmani, obra, emilkowalski, nextlevelbuilder).
 
 ### Shared Skills `.brain/shared/skills/`
 
@@ -85,7 +86,7 @@ RAI-Engineering organizes knowledge into **domain-isolated subtrees**. Each doma
 | using-git-worktrees | obra | Isolated workspaces for parallel agents |
 | finishing-a-development-branch | obra | Merging/pushing/discarding branches |
 
-### Frontend Skills `.brain/frontend/rai-engineering/skills/`
+### Frontend Skills `.brain/frontend/skills/`
 
 | Skill | Source | Use When |
 |-------|--------|----------|
@@ -96,7 +97,7 @@ RAI-Engineering organizes knowledge into **domain-isolated subtrees**. Each doma
 | apple-design-principles | emilkowalski | Apple WWDC design principles for web |
 | animation-vocabulary | emilkowalski | Precise animation terminology for agents |
 
-### DevOps Skills `.brain/devops/rai-engineering/skills/`
+### DevOps Skills `.brain/devops/skills/`
 
 | Skill | Source | Use When |
 |-------|--------|----------|
@@ -108,41 +109,42 @@ RAI-Engineering organizes knowledge into **domain-isolated subtrees**. Each doma
 
 | If you want to... | Read this |
 |-------------------|-----------|
-| Understand project architecture | `.brain/backend/rai-engineering/memory/guidelines.md` |
-| Check past decisions | `.brain/backend/rai-engineering/memory/decisions/` |
-| Learn from past mistakes | `.brain/backend/rai-engineering/memory/lessons/` |
-| See what was done recently | `.brain/backend/rai-engineering/memory/tasks/` |
-| Create a service | `.brain/backend/rai-engineering/skills/service.md` |
-| Create a controller | `.brain/backend/rai-engineering/skills/controller.md` |
-| Create an API resource | `.brain/backend/rai-engineering/skills/resource.md` |
-| Generate a full CRUD | `.brain/backend/rai-engineering/skills/crud.md` |
+| Understand project architecture | `.brain/backend/memory/guidelines.md` |
+| Check past decisions | `.brain/backend/memory/decisions/` |
+| Learn from past mistakes | `.brain/backend/memory/lessons/` |
+| See what was done recently | `.brain/backend/memory/tasks/` |
+| Create a service | `.brain/backend/skills/service.md` |
+| Create a controller | `.brain/backend/skills/controller.md` |
+| Create an API resource | `.brain/backend/skills/resource.md` |
+| Generate a full CRUD | `.brain/backend/skills/crud.md` |
 | Browse ALL cross-domain skills | `.brain/shared/skills/` (27 skills) |
-| Browse frontend skills | `.brain/frontend/rai-engineering/skills/` (6 skills) |
-| Browse devops skills | `.brain/devops/rai-engineering/skills/` (1 skill) |
-| Follow project conventions | `.brain/backend/rai-engineering/rules/project-rules.md` |
-| Check DB schema | `.brain/backend/rai-engineering/connections/database.md` |
-| Browse plans | `.brain/backend/rai-engineering/plans/` |
+| Browse frontend skills | `.brain/frontend/skills/` (6 skills) |
+| Browse devops skills | `.brain/devops/skills/` (1 skill) |
+| Follow project conventions | `.brain/backend/rules/project-rules.md` |
+| Check DB schema | `.brain/backend/connections/database.md` |
+| Browse plans | `.brain/backend/plans/` |
 
 ---
 
 ## Active Decisions
 
-- [Caveman ULTRA Install](backend/rai-engineering/memory/decisions/caveman-ultra-install.md) — 67% token compression
-- [Super TESTER Upgrade](backend/rai-engineering/memory/decisions/super-tester-upgrade.md) — 5 testing modes
-- [.brain/ Migration](backend/rai-engineering/memory/decisions/brain-migration.md) — Team-wide AI knowledge base
-- [Orchestration Engine](backend/rai-engineering/memory/decisions/2026-07-23-orchestration-engine.md) — Parallel execution engine
+- [Caveman ULTRA Install](backend/memory/decisions/caveman-ultra-install.md) — 67% token compression
+- [Super TESTER Upgrade](backend/memory/decisions/super-tester-upgrade.md) — 5 testing modes
+- [.brain/ Migration](backend/memory/decisions/brain-migration.md) — Team-wide AI knowledge base
+- [Orchestration Engine](backend/memory/decisions/2026-07-23-orchestration-engine.md) — Parallel execution engine
 
 ## Lessons
 
-- [Version Bump Before Push](backend/rai-engineering/memory/lessons/version-bump-before-push.md) — R30
+- [Version Bump Before Push](backend/memory/lessons/version-bump-before-push.md) — R30
 
 ## Task Summaries
 
-- [Super TESTER Upgrade](backend/rai-engineering/memory/tasks/2026-07-13-super-tester-upgrade.md)
-- [.brain/ Migration](backend/rai-engineering/memory/tasks/2026-07-13-brain-migration.md)
+- [Super TESTER Upgrade](backend/memory/tasks/2026-07-13-super-tester-upgrade.md)
+- [.brain/ Migration](backend/memory/tasks/2026-07-13-brain-migration.md)
 
 ## Plans
 
-- [Multi-Session Mesh](backend/rai-engineering/plans/2026-07-19-multi-session-architecture.md)
-- [Domain Isolation Protocol](backend/rai-engineering/plans/2026-07-21-domain-isolation-protocol.md)
-- [Orchestration & Parallel Execution](backend/rai-engineering/plans/2026-07-23-orchestration-parallel-execution.md)
+- [Multi-Session Mesh](backend/plans/2026-07-19-multi-session-architecture.md)
+- [Domain Isolation Protocol](backend/plans/2026-07-21-domain-isolation-protocol.md)
+- [Orchestration & Parallel Execution](backend/plans/2026-07-23-orchestration-parallel-execution.md)
+- [Flatten Domain Structure](backend/plans/2026-07-23-flatten-domain-structure.md)

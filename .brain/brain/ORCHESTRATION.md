@@ -323,9 +323,9 @@ When two sub-agents produce outputs that disagree:
 
 The ORCHESTRATOR ENGINE resolves conflicts by checking these sources in order:
 
-1. **Project rules** (`.brain/{domain}/{project}/rules/`) — Does a rule govern this?
-2. **Past decisions** (`.brain/{domain}/{project}/memory/decisions/`) — Was this decided before?
-3. **Guidelines** (`.brain/{domain}/{project}/memory/guidelines.md`) — What does the architecture say?
+1. **Project rules** (`.brain/{domain}/rules/`) — Does a rule govern this?
+2. **Past decisions** (`.brain/{domain}/memory/decisions/`) — Was this decided before?
+3. **Guidelines** (`.brain/{domain}/memory/guidelines.md`) — What does the architecture say?
 4. **Convention** (R26 — Naming, API consistency) — What's the existing pattern?
 5. **Framework default** — What does the framework (Laravel, React, etc.) prefer?
 
@@ -409,7 +409,7 @@ After all sub-agents in all waves report done, the ORCHESTRATOR ENGINE runs thes
 | `no_pending_todos` | No sub-agent left `// TODO` or `// FIXME` markers | Zero unresolved markers in new code |
 | `no_blockers_left` | No sub-agent flagged a blocker | Zero items in `crossAgentCommunications` with status "pending" |
 | `dependencies_wired` | Cross-sub-agent references are correctly wired | Frontend calls the actual Backend endpoint created |
-| `domain_isolation` | No sub-agent wrote outside its domain folder | All writes are within `.brain/{domain}/{project}/` |
+| `domain_isolation` | No sub-agent wrote outside its domain folder | All writes are within `.brain/{domain}/` |
 | `scope_contained` | No changes outside original task scope | Only files in the original plan were touched |
 
 ### Re-Dispatch Rules
@@ -452,7 +452,7 @@ Not Allowed:
 
 ### Never Break Domain Isolation
 
-- Sub-agents only read/write their own domain folder (`.brain/{domain}/{project}/`)
+- Sub-agents only read/write their own domain folder (`.brain/{domain}/`)
 - Cross-domain data flows through the ORCHESTRATOR ENGINE relay, not direct file access
 - If a sub-agent needs to read from another domain, it requests through the ORCHESTRATOR ENGINE
 - The verification check `domain_isolation` enforces this

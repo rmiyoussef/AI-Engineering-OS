@@ -273,27 +273,27 @@ User request arrives
     |   ├─► Backend / Frontend / Mobile iOS / Mobile Android / DevOps
     |   └─► If project spans multiple domains, identify primary domain
     |
-[2] **CHECK DOMAIN FOLDER** — `.brain/{domain}/{project}/` exists?
+[2] **CHECK DOMAIN FOLDER** — `.brain/{domain}/` exists?
     |   If not → create with plans/, rules/, skills/, memory/ subdirs
     |
 [3] BRAIN reads .brain/INDEX.md         ← What does the project know?
     |   (if no INDEX.md, project is new)
     |
-[4] BRAIN reads .brain/{domain}/{project}/memory/guidelines.md
+[4] BRAIN reads .brain/{domain}/memory/guidelines.md
     |   (if no guidelines.md, call ARCHITECT to create from analysis)
     |
-[5] BRAIN reads .brain/{domain}/{project}/memory/decisions/
+[5] BRAIN reads .brain/{domain}/memory/decisions/
     |
-[6] BRAIN reads .brain/{domain}/{project}/memory/architecture/
+[6] BRAIN reads .brain/{domain}/memory/architecture/
     |
-[7] BRAIN reads .brain/{domain}/{project}/memory/lessons/
+[7] BRAIN reads .brain/{domain}/memory/lessons/
     |
 [8] If task involves database:
-    ├─► BRAIN reads .brain/{domain}/{project}/connections/database.md
+    ├─► BRAIN reads .brain/{domain}/connections/database.md
     └─► BRAIN calls DATABASE agent
     |
 [9] If task involves security:
-    ├─► BRAIN reads .brain/{domain}/{project}/memory/security/
+    ├─► BRAIN reads .brain/{domain}/memory/security/
     └─► BRAIN calls SECURITY agent
     |
 [10] BRAIN creates session UUID

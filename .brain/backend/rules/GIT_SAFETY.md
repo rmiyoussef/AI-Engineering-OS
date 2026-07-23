@@ -20,13 +20,17 @@ The following must **never** appear in Git history:
 
 ## R2 — `connections/` Is Gitignored (All Domains)
 
-The `.brain/{domain}/{project}/connections/` directories contain database schema info that the BRAIN reads. They may contain or sit alongside sensitive information. **They must never be committed.**
+The `.brain/{domain}/connections/` directories contain database schema info that the BRAIN reads. They may contain or sit alongside sensitive information. **They must never be committed.**
 
 Verify `.gitignore` contains:
 
 ```
 # RAI-Engineering — Domain connections (may contain schema with sensitive paths)
-.brain/*/*/connections/
+.brain/backend/connections/
+.brain/frontend/connections/
+.brain/mobile-ios/connections/
+.brain/mobile-android/connections/
+.brain/devops/connections/
 ```
 
 ## R3 — Verify Before Commit
@@ -64,7 +68,11 @@ storage/logs/*
 *.sql, *.dump, *.backup (database dumps)
 .DS_Store, Thumbs.db
 node_modules/, vendor/, .venv/ (should already be gitignored)
-.brain/*/*/connections/
+.brain/backend/connections/
+.brain/frontend/connections/
+.brain/mobile-ios/connections/
+.brain/mobile-android/connections/
+.brain/devops/connections/
 *.log
 ```
 

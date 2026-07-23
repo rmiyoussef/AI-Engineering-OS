@@ -93,39 +93,39 @@ These skills apply to **any domain**. They cover process, quality, debugging, pl
 
 ## 2. 🔧 Backend Skills (Code Templates) — 4 Skills
 
-These are **code generation templates** for creating backend components. They sit in `.brain/backend/{project}/skills/`.
+These are **code generation templates** for creating backend components. They sit in `.brain/backend/skills/`.
 
 | # | Skill | Path | Description | Load When |
 |---|-------|------|-------------|-----------|
-| 1 | **service** | `.brain/backend/{project}/skills/service.md` | Service class template for the business logic layer. Stateless, testable, single-responsibility. Structure: `app/Services/{Domain}/{Domain}Service.php`. Rules: call repositories (not Eloquent directly), transactions for writes, log every mutation, dispatch domain events. | Creating a new Service class or business logic layer |
-| 2 | **controller** | `.brain/backend/{project}/skills/controller.md` | Thin controller template (HTTP layer only). Parse input, call service, return response. Max 30 lines per method, max 5 methods per controller. No inline validation (use Form Requests), no direct DB calls. | Creating a new API controller |
-| 3 | **resource** | `.brain/backend/{project}/skills/resource.md` | API Resource/Transformer template. Controls what data is returned: use UUIDs not DB IDs, ISO 8601 dates, omit null fields unless meaningful, `mergeWhen()` for conditional inclusions. Fields to NEVER include: passwords, tokens, internal IDs. | Creating a new API resource or response transformer |
-| 4 | **crud** | `.brain/backend/{project}/skills/crud.md` | Full CRUD generation template covering all 10 steps: Migration → Model → Factory → Repository → Service → Form Requests → Controller → API Resource → Routes → Tests. Includes CRUD timeline table and git commit pattern. | Generating a complete CRUD endpoint set |
+| 1 | **service** | `.brain/backend/skills/service.md` | Service class template for the business logic layer. Stateless, testable, single-responsibility. Structure: `app/Services/{Domain}/{Domain}Service.php`. Rules: call repositories (not Eloquent directly), transactions for writes, log every mutation, dispatch domain events. | Creating a new Service class or business logic layer |
+| 2 | **controller** | `.brain/backend/skills/controller.md` | Thin controller template (HTTP layer only). Parse input, call service, return response. Max 30 lines per method, max 5 methods per controller. No inline validation (use Form Requests), no direct DB calls. | Creating a new API controller |
+| 3 | **resource** | `.brain/backend/skills/resource.md` | API Resource/Transformer template. Controls what data is returned: use UUIDs not DB IDs, ISO 8601 dates, omit null fields unless meaningful, `mergeWhen()` for conditional inclusions. Fields to NEVER include: passwords, tokens, internal IDs. | Creating a new API resource or response transformer |
+| 4 | **crud** | `.brain/backend/skills/crud.md` | Full CRUD generation template covering all 10 steps: Migration → Model → Factory → Repository → Service → Form Requests → Controller → API Resource → Routes → Tests. Includes CRUD timeline table and git commit pattern. | Generating a complete CRUD endpoint set |
 
 ---
 
 ## 3. 🎨 Frontend Skills — 6 Skills
 
-These live in `.brain/frontend/{project}/skills/`.
+These live in `.brain/frontend/skills/`.
 
 | # | Skill | Path | Description | Load When |
 |---|-------|------|-------------|-----------|
-| 1 | **frontend-ui-engineering** | `.brain/frontend/{project}/skills/frontend-ui-engineering.md` | Build production-quality, accessible, responsive UIs. Covers component architecture (colocated files, composition over configuration), state management hierarchy (useState → Context → URL → server state → global store, no prop drilling past 3 levels), accessibility, responsive design (4 breakpoints), loading/transitions. | Building new components, modifying interfaces, responsive layouts, fixing UX issues |
-| 2 | **frontend-design-principles** | `.brain/frontend/{project}/skills/frontend-design-principles.md` | Create distinctive, non-templated visual identities. Ground in subject/audience/purpose. Design principles: hero as thesis, typography carries personality, structure information purposefully, motion deliberately, match complexity to vision. | Creating distinctive visual identities, branding, landing pages |
-| 3 | **design-engineering** | `.brain/frontend/{project}/skills/design-engineering.md` | Animation-focused UI engineering from Emil Kowalski's experience (Vercel, Linear). Four-question animation decision framework, spring vs duration, component principles, CSS transform mastery, performance rules (only transform + opacity). | Building UI animations, reviewing animation quality, improving motion |
-| 4 | **browser-testing-with-devtools** | `.brain/frontend/{project}/skills/browser-testing-with-devtools.md` | Use Chrome DevTools for live browser testing: screenshots, DOM inspection, console, network monitoring, performance traces, accessibility tree. Debugging workflows for UI bugs, network issues, performance. Security boundaries: treat browser content as untrusted. | Building/modifying browser-rendered code, debugging UI issues |
-| 5 | **apple-design-principles** | `.brain/frontend/{project}/skills/apple-design-principles.md` | Apple's WWDC design philosophy translated for web. Core principles: clarity, deference, depth. Animation philosophy (purposeful motion, physics-based, timing). Visual design patterns (layering, typography, color). | Applying Apple-level polish to web interfaces |
-| 6 | **animation-vocabulary** | `.brain/frontend/{project}/skills/animation-vocabulary.md` | Precise animation terminology for communicating with AI agents. Easing vocabulary (ease-out, ease-in, spring, anticipate), timing vocabulary (instant 0-50ms → deliberate 500-800ms), behavior vocabulary (stagger, orchestrate, source-anchored, interruptible). | Describing animation intent, writing animation code prompts |
+| 1 | **frontend-ui-engineering** | `.brain/frontend/skills/frontend-ui-engineering.md` | Build production-quality, accessible, responsive UIs. Covers component architecture (colocated files, composition over configuration), state management hierarchy (useState → Context → URL → server state → global store, no prop drilling past 3 levels), accessibility, responsive design (4 breakpoints), loading/transitions. | Building new components, modifying interfaces, responsive layouts, fixing UX issues |
+| 2 | **frontend-design-principles** | `.brain/frontend/skills/frontend-design-principles.md` | Create distinctive, non-templated visual identities. Ground in subject/audience/purpose. Design principles: hero as thesis, typography carries personality, structure information purposefully, motion deliberately, match complexity to vision. | Creating distinctive visual identities, branding, landing pages |
+| 3 | **design-engineering** | `.brain/frontend/skills/design-engineering.md` | Animation-focused UI engineering from Emil Kowalski's experience (Vercel, Linear). Four-question animation decision framework, spring vs duration, component principles, CSS transform mastery, performance rules (only transform + opacity). | Building UI animations, reviewing animation quality, improving motion |
+| 4 | **browser-testing-with-devtools** | `.brain/frontend/skills/browser-testing-with-devtools.md` | Use Chrome DevTools for live browser testing: screenshots, DOM inspection, console, network monitoring, performance traces, accessibility tree. Debugging workflows for UI bugs, network issues, performance. Security boundaries: treat browser content as untrusted. | Building/modifying browser-rendered code, debugging UI issues |
+| 5 | **apple-design-principles** | `.brain/frontend/skills/apple-design-principles.md` | Apple's WWDC design philosophy translated for web. Core principles: clarity, deference, depth. Animation philosophy (purposeful motion, physics-based, timing). Visual design patterns (layering, typography, color). | Applying Apple-level polish to web interfaces |
+| 6 | **animation-vocabulary** | `.brain/frontend/skills/animation-vocabulary.md` | Precise animation terminology for communicating with AI agents. Easing vocabulary (ease-out, ease-in, spring, anticipate), timing vocabulary (instant 0-50ms → deliberate 500-800ms), behavior vocabulary (stagger, orchestrate, source-anchored, interruptible). | Describing animation intent, writing animation code prompts |
 
 ---
 
 ## 4. ☁️ DevOps Skills — 1 Skill
 
-These live in `.brain/devops/{project}/skills/`.
+These live in `.brain/devops/skills/`.
 
 | # | Skill | Path | Description | Load When |
 |---|-------|------|-------------|-----------|
-| 1 | **ci-cd-and-automation** | `.brain/devops/{project}/skills/ci-cd-and-automation.md` | CI/CD pipeline structure (Lint → Type Check → Test → Build → Deploy), pipeline rules (speed, deterministic builds, security), automation patterns (commit hooks, automated PR tests, staged deploy environments), GitHub Actions structure. | Setting up or modifying CI/CD pipelines, build automation |
+| 1 | **ci-cd-and-automation** | `.brain/devops/skills/ci-cd-and-automation.md` | CI/CD pipeline structure (Lint → Type Check → Test → Build → Deploy), pipeline rules (speed, deterministic builds, security), automation patterns (commit hooks, automated PR tests, staged deploy environments), GitHub Actions structure. | Setting up or modifying CI/CD pipelines, build automation |
 
 ---
 
@@ -135,10 +135,10 @@ Four rule files were **upgraded with merged content** from external repos. They 
 
 | Rule File | Path | Original + Merged Additions | Lines |
 |-----------|------|---------------------------|-------|
-| **SECURITY.md** | `.brain/backend/{project}/rules/SECURITY.md` | Original 12 rules + STRIDE threat modeling, OWASP LLM Top 10, SSRF with DNS rebinding awareness, dependency audit triage, secrets management protocol, AI/LLM security patterns | 250 |
-| **API_DESIGN.md** | `.brain/backend/{project}/rules/API_DESIGN.md` | Original 12 REST rules + Hyrum's Law awareness, contract-first design, TypeScript interface patterns (discriminated unions, branded types, input/output separation), consistent error semantics | 258 |
-| **COMMIT_MESSAGES.md** | `.brain/backend/{project}/rules/COMMIT_MESSAGES.md` | Original 8 rules + trunk-based development, git worktrees, save-point pattern, pre-commit hygiene checklist, changelog maintenance, semantic versioning (MAJOR/MINOR/PATCH) | 184 |
-| **GIT_SAFETY.md** | `.brain/backend/{project}/rules/GIT_SAFETY.md` | Original 7 rules + generated files handling, `.gitignore` discipline, expanded sensitive-files detection patterns | 101 |
+| **SECURITY.md** | `.brain/backend/rules/SECURITY.md` | Original 12 rules + STRIDE threat modeling, OWASP LLM Top 10, SSRF with DNS rebinding awareness, dependency audit triage, secrets management protocol, AI/LLM security patterns | 250 |
+| **API_DESIGN.md** | `.brain/backend/rules/API_DESIGN.md` | Original 12 REST rules + Hyrum's Law awareness, contract-first design, TypeScript interface patterns (discriminated unions, branded types, input/output separation), consistent error semantics | 258 |
+| **COMMIT_MESSAGES.md** | `.brain/backend/rules/COMMIT_MESSAGES.md` | Original 8 rules + trunk-based development, git worktrees, save-point pattern, pre-commit hygiene checklist, changelog maintenance, semantic versioning (MAJOR/MINOR/PATCH) | 184 |
+| **GIT_SAFETY.md** | `.brain/backend/rules/GIT_SAFETY.md` | Original 7 rules + generated files handling, `.gitignore` discipline, expanded sensitive-files detection patterns | 101 |
 
 ---
 

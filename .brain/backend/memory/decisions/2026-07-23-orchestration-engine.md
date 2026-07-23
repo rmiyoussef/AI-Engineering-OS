@@ -35,16 +35,17 @@
 ## Files Created
 - `.brain/agents/ORCHESTRATOR_ENGINE.md` — Agent definition with full schema
 - `.brain/brain/ORCHESTRATION.md` — Orchestration protocol specification
-- `.brain/backend/rai-engineering/rules/orchestration-rules.md` — R41-R45
+- `.brain/backend/rules/orchestration-rules.md` — R41-R45
 
 ## Files Modified
 - `CLAUDE.md` — Added agent, Phase 0b, R41-R45, version v1.4
 - `.brain/brain/SYSTEM.md` — Added ORCHESTRATOR ENGINE to mesh, protocol
 - `.brain/brain/RULES.md` — Added R41-R45
 - `.brain/INDEX.md` — Added new entries
-- `.brain/backend/rai-engineering/memory/guidelines.md` — Added orchestration section
+- `.brain/backend/memory/guidelines.md` — Added orchestration section
 
 ## Related
 - See also: [[orchestration-rules]] — Rules R41-R45
 - See also: [[ORCHESTRATION.md]] — Protocol specification
 - See also: [[ORCHESTRATOR_ENGINE.md]] — Agent definition
+- See also: [[backend/plans/2026-07-23-flatten-domain-structure]] — Domain flattening decision

@@ -162,11 +162,11 @@ your-project/
 │   ├── templates/                ← Memory templates
 │   └── workflows/                ← Workflow references
 └── .brain/                       ← YOUR project knowledge — domain-isolated
-    ├── backend/{project}/        ← Backend memory, skills, rules, plans
-    ├── frontend/{project}/       ← Frontend memory, skills, rules, plans
-    ├── mobile-ios/{project}/     ← iOS memory, skills, rules, plans
-    ├── mobile-android/{project}/ ← Android memory, skills, rules, plans
-    └── devops/{project}/         ← DevOps memory, skills, rules, plans
+    ├── backend/        ← Backend memory, skills, rules, plans
+    ├── frontend/       ← Frontend memory, skills, rules, plans
+    ├── mobile-ios/     ← iOS memory, skills, rules, plans
+    ├── mobile-android/ ← Android memory, skills, rules, plans
+    └── devops/         ← DevOps memory, skills, rules, plans
 ```
 
 ### Update
@@ -225,17 +225,17 @@ Every decision, lesson, test result, and task is saved to `.brain/` — a **team
 ├── brain/                   ← Core system files (MISSION, PRINCIPLES, RULES, SYSTEM)
 ├── templates/               ← Summary & testing templates
 │
-├── backend/{project}/       ← Backend domain
+├── backend/       ← Backend domain
 │   ├── memory/              ← guidelines, decisions, lessons, sessions, tests, tasks
 │   ├── skills/              ← Code templates (service, controller, resource, crud)
 │   ├── rules/               ← Project conventions
 │   ├── plans/               ← Project plans
 │   └── connections/         ← DB schema (gitignored)
 │
-├── frontend/{project}/      ← Frontend domain (isolated)
-├── mobile-ios/{project}/    ← iOS domain (isolated)
-├── mobile-android/{project}/← Android domain (isolated)
-└── devops/{project}/        ← DevOps domain (isolated)
+├── frontend/      ← Frontend domain (isolated)
+├── mobile-ios/    ← iOS domain (isolated)
+├── mobile-android/← Android domain (isolated)
+└── devops/        ← DevOps domain (isolated)
 ```
 
 **Summaries are always written.** Every task, test, and discussion saves a summary. If you ask for a summary and it doesn't exist yet, it's created before responding.
@@ -250,23 +250,23 @@ When installed, your project gets access to domain-isolated engineering rules:
 
 | Rule File (Domain) | Covers |
 |-----------|--------|
-| `.brain/backend/{project}/rules/COMMIT_MESSAGES.md` | Conventional commit format, types, scopes |
-| `.brain/backend/{project}/rules/ERROR_HANDLING.md` | Exceptions, logging, fail-fast, HTTP codes |
-| `.brain/backend/{project}/rules/NAMING_CONVENTIONS.md` | Classes, methods, variables, tests naming |
-| `.brain/backend/{project}/rules/SECURITY.md` | Input validation, SQL injection, XSS, CSRF, auth |
-| `.brain/backend/{project}/rules/DATABASE.md` | Migrations, indexing, N+1, pagination, constraints |
-| `.brain/backend/{project}/rules/API_DESIGN.md` | RESTful URLs, consistent responses, versioning |
+| `.brain/backend/rules/COMMIT_MESSAGES.md` | Conventional commit format, types, scopes |
+| `.brain/backend/rules/ERROR_HANDLING.md` | Exceptions, logging, fail-fast, HTTP codes |
+| `.brain/backend/rules/NAMING_CONVENTIONS.md` | Classes, methods, variables, tests naming |
+| `.brain/backend/rules/SECURITY.md` | Input validation, SQL injection, XSS, CSRF, auth |
+| `.brain/backend/rules/DATABASE.md` | Migrations, indexing, N+1, pagination, constraints |
+| `.brain/backend/rules/API_DESIGN.md` | RESTful URLs, consistent responses, versioning |
 
-| `.brain/backend/{project}/rules/TESTING_RULES.md` | Writing tests — coverage, scenarios, templates |
+| `.brain/backend/rules/TESTING_RULES.md` | Writing tests — coverage, scenarios, templates |
 
 | Template | When Used |
 |----------|-----------|
 | `.brain/templates/summary/TEST_SUMMARY.md` | Team-ready test summary (icons, tables, security, perf, DB) |
 | `.brain/templates/summary/TASK_SUMMARY.md` | Full task summary (files, tests, security, quality scores) |
-| `.brain/backend/{project}/skills/service.md` | Service class — structure, rules, transactions |
-| `.brain/backend/{project}/skills/controller.md` | Controller — thin HTTP layer, action methods |
-| `.brain/backend/{project}/skills/resource.md` | API Resource — response transformation, field filtering |
-| `.brain/backend/{project}/skills/crud.md` | Full CRUD — migration, model, service, controller, routes, tests |
+| `.brain/backend/skills/service.md` | Service class — structure, rules, transactions |
+| `.brain/backend/skills/controller.md` | Controller — thin HTTP layer, action methods |
+| `.brain/backend/skills/resource.md` | API Resource — response transformation, field filtering |
+| `.brain/backend/skills/crud.md` | Full CRUD — migration, model, service, controller, routes, tests |
 
 Rules are loaded automatically based on what domain the task touches.
 
@@ -414,21 +414,21 @@ Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (i
 
 ```
 .brain/
-├── backend/{project}/         ← Backend domain
+├── backend/         ← Backend domain
 │   ├── plans/                 ← Project plans
 │   ├── rules/                 ← Framework-specific rules (laravel, express, django...)
 │   ├── skills/                ← Code templates (service, controller, resource, crud)
 │   └── memory/                ← Guidelines, decisions, lessons, sessions, tests, tasks
 │
-├── frontend/{project}/        ← Frontend domain (isolated)
+├── frontend/        ← Frontend domain (isolated)
 │   ├── plans/                 ← Project plans
 │   ├── rules/                 ← Framework-specific rules (react, vue, angular...)
 │   ├── skills/                ← Component templates, UI patterns
 │   └── memory/                ← Frontend-specific knowledge
 │
-├── mobile-ios/{project}/      ← iOS domain (isolated)
-├── mobile-android/{project}/  ← Android domain (isolated)
-└── devops/{project}/          ← DevOps domain (isolated)
+├── mobile-ios/      ← iOS domain (isolated)
+├── mobile-android/  ← Android domain (isolated)
+└── devops/          ← DevOps domain (isolated)
 ```
 
 ### Isolation Rules

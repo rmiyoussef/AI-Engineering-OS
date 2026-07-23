@@ -144,7 +144,7 @@ Goal: No sub-agent waits more than one cycle for information from another sub-ag
 
 ### R44 — Auto-Resolve Conflicts Using Project Rules
 When two sub-agents disagree (naming, contracts, approach):
-1. Check project rules (`.brain/{domain}/{project}/rules/`) for a governing rule
+1. Check project rules (`.brain/{domain}/rules/`) for a governing rule
 2. Check `memory/decisions/` for a precedent
 3. Check guidelines.md for conventions
 4. If a rule/decision/convention exists: resolve automatically, log which rule was used
