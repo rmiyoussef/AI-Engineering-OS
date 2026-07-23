@@ -209,6 +209,8 @@ Then give it a task:
 - *"Generate tests for the OrderService"*
 - *"Create a new API endpoint for user profiles"*
 
+For a **complete reference of all 37 skills** across Backend, Frontend, DevOps, and Shared domains — see [SKILLS.md](SKILLS.md).
+
 ---
 
 ## Project Memory — Domain Isolated
