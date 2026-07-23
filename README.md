@@ -1,6 +1,6 @@
 # RAI-Engineering
 
-**An operating system for AI software engineering.**
+**Your project's AI brain.**
 
 Instead of behaving like a chatbot, the AI behaves like an **engineering organization** — with specialized agents that plan, build, review, test, audit, and remember. All project knowledge is organized into **domain-isolated subtrees** so Backend rules never leak into Frontend, and vice versa.
 
