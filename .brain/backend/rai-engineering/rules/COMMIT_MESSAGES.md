@@ -1,6 +1,7 @@
 # Commit Message Rules
 
-> Conventional commit format. Every project should adopt these rules for consistent, readable history.
+> **Merged v2.0** — Original 8 rules + trunk-based development, worktrees, save-point pattern, pre-commit hygiene, changelogs, semantic versioning.
+> **Loaded by:** EXECUTOR agent, GITHUB agent, GITHUB TASKS agent, REVIEWER agent.
 
 ---
 
@@ -105,3 +106,79 @@ If you need to do multiple things, make multiple commits:
 1. refactor(users): extract validation to form request
 2. feat(users): add profile photo upload
 ```
+
+## R9 — Pre-Commit Hygiene
+
+Before every commit, verify:
+
+- [ ] `git diff` reviewed — no debug code, no `dd()`/`dump()`/`console.log()`
+- [ ] No secrets, tokens, or credentials in the diff
+- [ ] Tests pass (run the relevant test, not the full suite without approval)
+- [ ] Linting passes (or fix warnings if they exist)
+- [ ] No hardcoded URLs, IPs, or environment-specific values
+
+## R10 — Trunk-Based Development
+
+Keep `main` always deployable. Work in short-lived feature branches that merge back within 1-3 days.
+
+Branch naming:
+```
+feature/description     — new features
+fix/description         — bug fixes
+chore/description       — maintenance, deps, config
+refactor/description    — code restructuring (no behavior change)
+```
+
+## R11 — Git Worktrees for Parallel Work
+
+When running multiple AI agents on the same repo, use git worktrees to avoid conflicts:
+
+```bash
+git worktree add ../project-feature-x feature/x
+```
+
+Each worktree is an independent working directory with its own branch. Agents don't interfere.
+
+## R12 — The Save-Point Pattern
+
+For experimental or risky changes, commit early and often:
+
+```
+1. Make a small change
+2. Test
+3. Commit (or revert if broken)
+4. Repeat
+```
+
+This gives you safe rollback points and clean diffs. Don't accumulate 100+ lines of uncommitted changes.
+
+## R13 — Changelog Maintenance
+
+Keep a human-readable changelog, written at change time (not retroactively):
+
+```
+# Changelog
+
+## [1.2.0] - 2026-07-15
+### Added
+- Bulk order export (closes #456)
+- Password reset flow
+
+### Fixed
+- Null pointer in profile endpoint (fixes #123)
+
+## [1.1.0] - 2026-06-30
+...
+```
+
+Format: **Keep a Changelog** (https://keepachangelog.com). Categorize: Added, Fixed, Changed, Deprecated, Removed, Security.
+
+## R14 — Semantic Versioning
+
+| Version | When | Example |
+|---------|------|---------|
+| MAJOR | Breaking API/behavior changes | 2.0.0 |
+| MINOR | New features, backward-compatible | 1.2.0 |
+| PATCH | Bug fixes, backward-compatible | 1.1.3 |
+
+Tag releases: `git tag v1.2.0 && git push origin v1.2.0`

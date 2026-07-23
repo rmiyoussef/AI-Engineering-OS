@@ -81,3 +81,26 @@ Route naming: `api.v1.{resource}.{action}`
 ## Brain
 
 The project uses **RAI-Engineering** as its main engine. See `.brain/INDEX.md` for full map.
+
+---
+
+## Orchestration
+
+RAI-Engineering v1.4+ includes an **Orchestration & Parallel Execution Engine** for any task spanning multiple domains or containing independent sub-tasks.
+
+**How it works:**
+1. BRAIN detects a multi-domain or complex task and routes to ORCHESTRATOR ENGINE
+2. ORCHESTRATOR ENGINE decomposes into sub-tasks with a dependency graph
+3. Sub-tasks are dispatched in parallel waves (no-dependency tasks run together)
+4. Cross-agent requests are relayed in real-time (never blocked > 1 cycle)
+5. Conflicts are auto-resolved using project rules
+6. A verification loop (max 3 cycles) checks contracts, todos, wiring
+7. If gaps found, affected sub-agents are re-dispatched for fixes
+8. After completion, normal REVIEWER → MEMORY SCRIBE → SUMMARY flow resumes
+
+**Key agents:**
+- `ORCHESTRATOR ENGINE` — Task orchestrator (decompose, dispatch, relay, verify)
+- Each domain sub-agent (Backend, Frontend, etc.) receives well-scoped sub-tasks
+
+**Rules:** R41-R45 govern orchestration behavior.
+**Protocol:** `.brain/brain/ORCHESTRATION.md` defines the full specification.

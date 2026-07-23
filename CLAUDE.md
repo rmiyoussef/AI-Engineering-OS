@@ -1,7 +1,7 @@
 # RAI-Engineering — CLAUDE.md
 
 > **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
-> **Version:** v1.3 — Domain Isolation Protocol (per-domain plans, rules, skills, memory)
+> **Version:** v1.5 — Skill Library Import (34 skills from 6 external repos)
 
 ============================================================
 ## SYSTEM IDENTITY
@@ -62,6 +62,7 @@ Every request becomes a conversation between agents:
 - TESTER validates correctness
 - REVIEWER scores the result
 - MEMORY SCRIBE persists everything
+- ORCHESTRATOR ENGINE orchestrates parallel multi-domain execution
 - ORCHESTRATOR coordinates the multi-session mesh
 - GITHUB delivers to production
 
@@ -129,6 +130,11 @@ Framework-specific rules/skills go inside the domain folder, scoped to the decla
 **R29** — **Template-led testing.** `.brain/templates/testing/` is the source of truth for test structure. User says "create template for X" → write to templates. User says "test X" → use existing template.
 **R30** — **Version bump before every push.** Update VERSION, CLAUDE.md header + footer, and README.md before every `git push`. All files must show the same version.
 **R31** — **Always write summaries.** Every task, test, or discussion writes a summary to `.brain/{domain}/{project}/memory/tasks/` or `.brain/{domain}/{project}/memory/tests/`. If user asks for a summary and none exists — create it before responding. Summaries are team-readable with tables, icons, security, perf, DB, clean code.
+**R41** — **Decompose before dispatch.** Full task graph before any sub-agent runs.
+**R42** — **Default to parallel.** Only serialize when a dependency forces it.
+**R43** — **Relay every cross-agent request.** Log, relay, deliver within the same turn.
+**R44** — **Auto-resolve conflicts by rules.** Ask user only for decisions with real consequences.
+**R45** — **Max 3 verification cycles.** Same-failure-3x escalates immediately.
 
 ### R36 — Domain Identity Required
 Every task must declare its domain (Backend, Frontend, Mobile iOS, Mobile Android, DevOps) before work begins. If the domain is unknown, the Brain must ask the user before proceeding. Never guess or assume the domain.
@@ -144,6 +150,35 @@ Rules and skills within a domain folder must be scoped to the declared framework
 
 ### R40 — Domain Folder Initialization
 When starting work on a new project in a domain, check if `.brain/{domain}/{project-name}/` exists first. If it doesn't, create it with `plans/`, `rules/`, `skills/`, and `memory/` subdirectories before proceeding. Never write domain knowledge without first verifying the target subtree exists.
+
+---
+
+## Orchestration Rules (R41-R45)
+
+### R41 — Decompose Before Dispatch
+Before sending any sub-task to a sub-agent, produce the full task decomposition and dependency graph. No sub-agent is dispatched until the full graph is understood. Simple/single sub-task tasks are exempt.
+
+**Violation:** Dispatch with no corresponding decomposition is rejected.
+
+### R42 — Default to Parallel
+Launch every sub-task whose dependencies are resolved at the same time. Serialize only when a real dependency blocks it. "Simpler to reason about sequentially" is not a valid reason to serialize.
+
+**Violation:** Excessive serialization is flagged during review.
+
+### R43 — Relay Every Cross-Agent Request
+When sub-agent A needs something from sub-agent B, log the request, relay to B within the same turn, and deliver B's response back to A within the same turn. No sub-agent should wait more than one verification cycle for information.
+
+**Violation:** An unanswered request persisting more than one cycle is a protocol error.
+
+### R44 — Auto-Resolve Conflicts Using Project Rules
+When two sub-agents disagree, attempt resolution in order: project rules → past decisions → guidelines → conventions (R26) → framework defaults. Escalate to user only if no rule resolves it AND the decision has real consequences (breaking change, cost, security tradeoff).
+
+**Violation:** Escalating a conflict resolvable by an existing rule wastes user time.
+
+### R45 — Max 3 Verification Cycles Before Escalating
+The autonomous completion loop runs max 3 cycles. Same-failure-3-times in a row escalates mid-cycle. After 3 cycles with remaining failures, stop and escalate. Never loop indefinitely.
+
+**Violation:** A 4th cycle triggers forced escalation.
 
 **R32** — **Session identity required.** Every session must register before sending/receiving inter-session messages.
 **R33** — **Heartbeat obligation.** Registered sessions must update their heartbeat every 60s.
@@ -241,7 +276,13 @@ Every request starts here:
     |   ├─► Discover peers in .brain/sessions/live/
     |   └─► Update heartbeat timestamp
     |
-[13] Route to appropriate agent based on task type
+[13] **ORCHESTRATOR ENGINE task analysis** (multi-domain or complex tasks):
+    |   ├─► Task involves multiple domains? → Decompose into sub-tasks
+    |   ├─► Task has independent pieces of work? → Decompose into sub-tasks
+    |   ├─► Build dependency graph and parallel waves
+    |   └─► If single-domain + single sub-task → skip, route normally
+    |
+[14] Route to appropriate agent based on task type (or to ORCHESTRATOR ENGINE for parallel dispatch)
 ```
 
 ============================================================
@@ -268,6 +309,21 @@ If `.brain/{domain}/{project}/memory/guidelines.md` is missing, ARCHITECT analyz
 - Creates `.brain/{domain}/{project}/connections/database.md` (gitignored)
 
 Read `.brain/agents/ARCHITECT.md` for the full schema.
+
+### Phase 0b: Task Orchestration (ORCHESTRATOR ENGINE leads)
+When a task spans multiple domains or has multiple independent sub-tasks, the ORCHESTRATOR ENGINE runs before any domain-specific planning:
+
+- Decompose the task into the smallest independent sub-tasks across all relevant domains
+- Map each sub-task to its domain sub-agent (Backend, Frontend, Mobile-iOS, Mobile-Android, DevOps, Security)
+- Build a dependency graph and resolve into parallel waves
+- Dispatch independent sub-tasks in parallel (Wave 1: no-dependency tasks)
+- Relay cross-agent requests in real-time (log → deliver → resolve)
+- Detect and auto-resolve conflicts using project rules (R44)
+- Run autonomous completion loop: verify → fix → verify (max 3 cycles, R45)
+- If scope expands or same failure repeats 3x → escalate to user
+- Produce structured final report with all sub-task results, relays, conflicts, verification status
+
+Read `.brain/agents/ORCHESTRATOR_ENGINE.md` and `.brain/brain/ORCHESTRATION.md` for full schemas.
 
 ### Phase 1: Planning (PLANNER leads)
 - Call ARCHIVIST for architecture understanding
@@ -433,6 +489,7 @@ REVIEWER score < 7
 | **GITHUB TASKS** | GitHub task manager — fetches issues, analyzes, plans, manages delivery | `.brain/agents/GITHUB_TASKS.md` |
 | **SUMMARY** | Documentation specialist — professional summaries, tables, metrics | `.brain/agents/SUMMARY.md` |
 | **ORCHESTRATOR** | Session manager — registration, heartbeat, inter-session routing | `.brain/agents/ORCHESTRATOR.md` |
+| **ORCHESTRATOR ENGINE** | Task orchestrator — decomposes, dispatches in parallel, relays, verifies | `.brain/agents/ORCHESTRATOR_ENGINE.md` |
 | **BRAIN (you)** | Message broker — routes, validates, persists | `.brain/brain/SYSTEM.md` |
 
 ============================================================
@@ -550,17 +607,20 @@ Read `.brain/brain/MEMORY_SYSTEM.md` for full protocol.
 ## VERSION
 ============================================================
 
-RAI-Engineering v1.3 — Domain Isolation Protocol (per-domain plans, rules, skills, memory)
-16 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
+RAI-Engineering v1.5 — Skill Library Import (34 skills from 6 external repos)
+17 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
            BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE,
-           GITHUB, GITHUB TASKS, SUMMARY, ORCHESTRATOR
+           GITHUB, GITHUB TASKS, SUMMARY, ORCHESTRATOR, ORCHESTRATOR ENGINE
 Domain-isolated .brain/ — per-domain subtrees: backend/, frontend/, mobile-ios/, mobile-android/, devops/
-40 rules (R1-R40) including inter-session rules (R32-R35) and domain isolation rules (R36-R40)
+45 rules (R1-R45) including inter-session rules (R32-R35), domain isolation rules (R36-R40), and orchestration rules (R41-R45)
 Skill Mandate: 8 rules enforced before every task — check trigger table, load matching skill
 Testing templates in .brain/templates/testing/ — API, Flow, DB, Performance, Code Quality
 Project skills in .brain/{domain}/{project}/skills/ — service, controller, resource, crud
+34 imported skills in .brain/shared/skills/, .brain/frontend/*/skills/, .brain/devops/*/skills/ — context-engineering, TDD, debugging, brainstorming, code-review, design, animations, CI/CD, and 27 more
 Multi-session mesh: sessions discover each other, send/receive messages, delegate work
+Orchestration engine: task decomposition, parallel wave dispatch, inter-agent relay, autonomous completion loop
 Domain isolation: Backend, Frontend, Mobile, DevOps knowledge never mixes
+4 rules merged & upgraded: SECURITY (+STRIDE/LLM/SSRF), API_DESIGN (+Hyrum/contract-first), COMMIT_MESSAGES (+trunk-based/semver), GIT_SAFETY (+generated-files)
 Zero slash commands needed — auto-detect and route
 Update: bash .ai/update.sh or ask me to update
 

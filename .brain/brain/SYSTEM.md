@@ -24,8 +24,8 @@ Every message between agents follows this structure:
 
 ```json
 {
-  "from": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | summary | orchestrator | brain | inter_session",
-  "to": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | summary | orchestrator | brain",
+  "from": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | summary | orchestrator | orchestrator_engine | brain | inter_session",
+  "to": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | summary | orchestrator | orchestrator_engine | brain",
   "type": "request | response | delegate | consult | escalate | error | done | inter_session_request | inter_session_delegate | inter_session_consult | inter_session_done | inter_session_error",
   "session": "<uuid>",
   "context": {
@@ -52,6 +52,11 @@ Every message between agents follows this structure:
 | `inter_session_consult` | "Another session, review this" — cross-session consultation |
 | `inter_session_done` | "Cross-session task complete" — response to inter-session delegate/request |
 | `inter_session_error` | "Cross-session error" — error response to inter-session message |
+| `orchestrate` | "Orchestrate this multi-domain task" — BRAIN to ORCHESTRATOR ENGINE |
+| `inter_agent_request` | "Sub-agent A needs X from sub-agent B" — relayed by ORCHESTRATOR ENGINE |
+| `inter_agent_response` | "Here is the response sub-agent A requested" — relayed by ORCHESTRATOR ENGINE |
+| `decompose` | "Break this task into sub-tasks" — ORCHESTRATOR ENGINE self-message |
+| `verify` | "Check that all sub-task outputs fit together" — ORCHESTRATOR ENGINE self-message |
 
 ---
 
@@ -170,7 +175,19 @@ This is how the agents are connected. Any agent can reach any other agent.
    │  GITHUB  │     │ORCHESTRATOR  │    │  TESTER  │
    └──────────┘     │(session mesh)│    └──────────┘
                     └──────────────┘
+                    ┌────────────────────────────┐
+                    │     ORCHESTRATOR ENGINE    │── Task orchestrator
+                    │  (decompose, dispatch in   │
+                    │   parallel, relay, verify) │
+                    └────────────────────────────┘
 ```
+
+**ORCHESTRATOR ENGINE connections:**
+- Dispatches to: PLANNER, EXECUTOR, REVIEWER, SECURITY (any domain agent)
+- Relays between: any sub-agent → another sub-agent
+- Consults: ARCHITECT (rules/conflicts), ARCHIVIST (file context)
+- Escalates to: BRAIN → user
+- After orchestration: normal flow continues with REVIEWER, MEMORY SCRIBE, SUMMARY
 
 ### Who Talks to Whom
 
@@ -234,6 +251,14 @@ This is how the agents are connected. Any agent can reach any other agent.
 | | ARCHIVIST | "Another session needs schema info — read and respond" |
 | | MEMORY | "Have we talked to this session before?" |
 | | Brain | "Register, poll inbox, deregister" |
+| **ORCHESTRATOR ENGINE** | PLANNER | "Decompose this sub-task of a larger multi-domain task" |
+| | EXECUTOR | "Execute this sub-task — here are the specs and dependency outputs" |
+| | REVIEWER | "Review the combined output of all sub-agents" |
+| | SECURITY | "Audit this sub-task for vulnerabilities" |
+| | ARCHITECT | "Is there a rule governing this naming conflict?" |
+| | ARCHIVIST | "Read these files for sub-task context" |
+| | BRAIN | "Escalating: need user decision on [issue]" |
+| | MEMORY | "Here's the full orchestration log for persistence" |
 
 ---
 
@@ -278,7 +303,20 @@ User request arrives
     ├── Poll inbox for pending inter-session messages
     └── Discover peers in session registry
     |
-[12] BRAIN routes to PLANNER (or appropriate agent based on task type)
+[12] BRAIN checks if task spans multiple domains or has independent sub-tasks
+    |
+    ├─► Multi-domain or complex → call ORCHESTRATOR ENGINE (Phase 0b)
+    |     ├── Decompose task into sub-tasks
+    |     ├── Build dependency graph and parallel waves
+    |     ├── Dispatch sub-agents in parallel
+    |     ├── Relay inter-agent requests
+    |     ├── Run autonomous completion loop (max 3 cycles)
+    |     └── Produce structured report
+    |     └── THEN route to REVIEWER → MEMORY SCRIBE → SUMMARY
+    |
+    └─► Single domain, single sub-task → route to PLANNER directly
+    |
+[13] BRAIN routes to PLANNER (or appropriate agent based on task type)
 ```
 
 **R17** says: Always read guidelines first. If missing, ARCHITECT creates it.

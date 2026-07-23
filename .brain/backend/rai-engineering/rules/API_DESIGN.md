@@ -1,8 +1,21 @@
 # API Design Rules
 
-> Rules for designing consistent, RESTful APIs.
+> **Merged v2.0** — Original 12 REST rules + Hyrum's Law, contract-first design, TypeScript interface patterns, consistent error semantics.
+> **Loaded by:** PLANNER agent, EXECUTOR agent, REVIEWER agent, BACKEND QA agent.
 
 ---
+
+## R0 — Design Principles
+
+**Hyrum's Law:** "With a sufficient number of users of an API, all observable behaviors of your system will be depended on by somebody." — Design interfaces that hide implementation details. Every leaky behavior (timing, ordering, error text) becomes a contract.
+
+**Contract First:** Define the interface contract (schema, types, error shapes) before writing implementation. The contract is the source of truth.
+
+**Consistent Error Semantics:** Every error follows the same shape, same codes, same patterns. Clients shouldn't need to parse error messages.
+
+**Validate at Boundaries:** Every entry point validates its input against the contract. Invalid input is rejected before reaching business logic.
+
+**Prefer Addition Over Modification:** Adding fields is safe. Changing or removing fields breaks clients. Deprecate before removing.
 
 ## R1 — RESTful URL Conventions
 
@@ -131,8 +144,6 @@ Every list endpoint must be paginated:
 GET /api/users?page=2&per_page=20
 ```
 
-Response includes meta with pagination info:
-
 ```json
 {
     "data": [...],
@@ -160,17 +171,7 @@ Every error has a machine-readable code:
 }
 ```
 
-Common codes:
-```
-VALIDATION_ERROR
-NOT_FOUND
-UNAUTHENTICATED
-FORBIDDEN
-RATE_LIMITED
-CONFLICT
-INTERNAL_ERROR
-SERVICE_UNAVAILABLE
-```
+Common codes: `VALIDATION_ERROR`, `NOT_FOUND`, `UNAUTHENTICATED`, `FORBIDDEN`, `RATE_LIMITED`, `CONFLICT`, `INTERNAL_ERROR`, `SERVICE_UNAVAILABLE`.
 
 ## R9 — Use ETags for Caching (Optional)
 
@@ -179,8 +180,6 @@ Response: ETag: "abc123"
 Request:  If-None-Match: "abc123"
 Response: 304 Not Modified (empty body)
 ```
-
-This allows clients to cache responses and reduce bandwidth.
 
 ## R10 — Never Include Sensitive Data
 
@@ -191,21 +190,7 @@ API responses must never include:
 - Personal data beyond what the client needs
 - Internal implementation details
 
-Use API resources/transformers to control output:
-
-```php
-class UserResource extends JsonResource {
-    public function toArray($request): array {
-        return [
-            'id' => $this->uuid,       // public UUID, not DB ID
-            'name' => $this->name,
-            'email' => $this->email,
-            'role' => $this->role,
-            'created_at' => $this->created_at,
-        ];
-    }
-}
-```
+Use API resources/transformers to control output.
 
 ## R11 — Idempotency for Mutations (Optional)
 
@@ -220,10 +205,54 @@ If the same key is received within 24 hours, return the previous response instea
 
 ## R12 — Document Breaking Changes
 
-Every API change must be classified:
-
 | Type | Examples | Requires Version Bump? |
 |------|----------|----------------------|
 | Non-breaking | Adding a field, adding an endpoint | No |
 | Breaking | Removing a field, changing a field type, changing status codes | Yes |
 | Deprecation | Marking a field as deprecated | No, but document the replacement |
+
+## R13 — TypeScript Interface Patterns (for SDK/API types)
+
+When defining TypeScript interfaces for your API:
+
+**Use discriminated unions for variant responses:**
+```typescript
+type ApiResponse<T> =
+  | { status: 'success'; data: T }
+  | { status: 'error'; code: string; message: string }
+```
+
+**Separate input and output types:**
+```typescript
+// Input — what the client sends (all fields optional for PATCH)
+interface UpdateUserInput {
+  name?: string;
+  email?: string;
+}
+
+// Output — what the server returns (all fields present)
+interface UserResponse {
+  id: string;
+  name: string;
+  email: string;
+  created_at: string;
+}
+```
+
+**Branded types for IDs (prevent type confusion):**
+```typescript
+type UserId = string & { readonly __brand: 'UserId' };
+type OrderId = string & { readonly __brand: 'OrderId' };
+```
+
+## R14 — Verification Checklist
+
+- [ ] Consistent response format across all endpoints
+- [ ] Correct HTTP status codes (no 200-with-error-in-body)
+- [ ] Pagination on all list endpoints
+- [ ] Error responses have machine-readable codes
+- [ ] No sensitive data in responses
+- [ ] Input/output types are separated (TypeScript SDKs)
+- [ ] Deprecation notice + replacement documented before breaking changes
+- [ ] Rate limiting on auth endpoints
+- [ ] Validation at every entry point boundary

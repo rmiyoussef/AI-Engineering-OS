@@ -42,29 +42,29 @@ The system is built around **16 specialized agents** that talk to each other thr
                              │
          ┌───────────────────┼──────────────────────┐
          ▼                   ▼                      ▼
-   ┌──────────┐       ┌──────────┐       ┌──────────┐
-   │ PLANNER  │◄─────►│ EXECUTOR │◄─────►│ REVIEWER │
-   └─────┬────┘       └─────┬────┘       └────┬─────┘
-         │                  │                  │
-         ▼                  ▼                  ▼
-   ┌──────────┐       ┌──────────┐       ┌──────────┐
-   │ARCHITECT │       │ CLEAN    │       │ BACKEND  │
-   │          │       │ CODE     │       │   QA     │
-   └─────┬────┘       └──────────┘       └────┬─────┘
-         │                                    │
-         ▼                                    ▼
-   ┌──────────┐       ┌──────────┐       ┌──────────┐
-   │  MEMORY  │       │ DATABASE │       │ SECURITY │
-   │  SCRIBE  │       │          │       │          │
-   └────┬─────┘       └──────────┘       └──────────┘
-        │                                    │
-        ▼                                    ▼
-   ┌──────────┐     ┌──────────────┐    ┌──────────┐
-   │  GITHUB  │     │ORCHESTRATOR  │    │  TESTER  │
-   │  TASKS   │     │(session mesh)│    │          │
-   └──────────┘     └──────────────┘    └──────────┘
-   │
-   └── GITHUB (PRs & commits)
+   ┌──────────┐       ┌──────────┐           ┌──────────┐
+   │ PLANNER  │◄─────►│ EXECUTOR │◄─────────►│ REVIEWER │
+   └─────┬────┘       └─────┬────┘           └────┬─────┘
+         │                  │                     │
+         ▼                  ▼                     ▼
+   ┌──────────┐       ┌──────────┐           ┌──────────┐
+   │ARCHITECT │       │ CLEAN    │           │ BACKEND  │
+   │          │       │ CODE     │           │   QA     │
+   └─────┬────┘       └──────────┘           └────┬─────┘
+         │                                        │
+         ▼                                        ▼
+   ┌──────────┐       ┌──────────┐           ┌──────────┐
+   │  MEMORY  │       │ DATABASE │           │ SECURITY │
+   │  SCRIBE  │       │          │           │          │
+   └────┬─────┘       └──────────┘           └──────────┘
+        │                                        │
+        ▼                                        ▼
+   ┌──────────┐     ┌──────────────┐         ┌──────────┐
+   │  GITHUB  │     │ ORCHESTRATOR │         │  TESTER  │
+   │  TASKS   │     │(session mesh)│         │          │
+   └──────────┘     └──────────────┘         └──────────┘
+        │
+        └── GITHUB (PRs & commits)
 
         ┌─────────────────────────────────┐
         │   DOMAIN-ISOLATED .brain/       │
@@ -176,6 +176,23 @@ bash .ai/update.sh
 ```
 
 Or just ask: *"Update RAI-Engineering"*
+
+### What's New in v1.5
+
+RAI-Engineering v1.5 imports **34 skills from 6 external repositories** — learned patterns, best practices, and prompt techniques from the broader AI-engineering ecosystem:
+
+| Source | Skills Adapted |
+|--------|----------------|
+| **mattpocock/skills** | TDD, codebase-design, domain-modeling, research, prototype, merge-conflicts, code-review (2-axis), improve-architecture |
+| **anthropics/skills** | Frontend design principles |
+| **addyosmani/agent-skills** | Context-engineering, planning, incremental-implementation, source/spec-driven-dev, code-simplification, documentation & ADRs, deprecation & migration, performance, shipping, observability, debugging, git-workflow, API design, security-hardening (+4 rule merges), frontend-UI, CI/CD, browser-testing |
+| **obra/superpowers** | Verification-before-completion, subagent-driven-dev, parallel-agents, executing-plans, writing-plans, brainstorming, using-git-worktrees, finishing-a-branch, systematic-debugging |
+| **emilkowalski/skills** | Design engineering, animation vocabulary, Apple design principles |
+| **nextlevelbuilder/ui-ux-pro-max** | Design intelligence patterns (palettes, typography, UX guidelines) |
+
+**4 rule files upgraded** — SECURITY (+STRIDE/OWASP LLM/SSRF/dep audit), API_DESIGN (+Hyrum/contract-first/TypeScript patterns), COMMIT_MESSAGES (+trunk-based/semver/changelogs), GIT_SAFETY (+generated-files discipline)
+
+See `.brain/shared/skills/`, `.brain/frontend/*/skills/`, and `.brain/devops/*/skills/` for all 34 new files.
 
 ### Use It
 
@@ -449,6 +466,8 @@ Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (i
 | v1.1 | **Multi-Session Mesh** — ORCHESTRATOR, inter-session bus, session registry | ✅ Done |
 | v1.2 | **Multi-Session Mesh (v1.1 release)** | ✅ Done |
 | v1.3 | **Domain Isolation Protocol** — per-domain plans, rules, skills, memory | ✅ Done |
+| v1.4 | **Orchestration Engine** — task decomposition, parallel dispatch, verify loop | ✅ Done |
+| v1.5 | **Skill Library Import** — 34 skills from 6 external repos, 4 rule merges | ✅ Done |
 
 ---
 
@@ -460,7 +479,7 @@ Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (i
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>RAI-Engineering — v1.3</small>
+    <small>RAI-Engineering — v1.5</small>
   </sub>
   <br>
 </div>

@@ -309,3 +309,32 @@ Every inter-session message must be idempotent. The same message delivered twice
 Session A cannot delegate to Session B if Session B delegates back to Session A (directly or through a chain). ORCHESTRATOR rejects messages that would create a cycle, tracked via `correlationId` ancestry.
 
 **Violation:** The message is rejected with "circular inter-session delegation detected".
+
+---
+
+## Orchestration Rules (R41-R45)
+
+### R41 — Decompose Before Dispatch
+Before sending any sub-task to a sub-agent, produce the full task decomposition and dependency graph. No sub-agent is dispatched until the full graph is understood. Simple/single sub-task tasks are exempt.
+
+**Violation:** Dispatch with no corresponding decomposition is rejected by the BRAIN.
+
+### R42 — Default to Parallel
+Launch every sub-task whose dependencies are resolved at the same time. Serialize only when a real dependency blocks it. "Simpler to reason about sequentially" is not a valid reason to serialize.
+
+**Violation:** Excessive serialization is flagged during review.
+
+### R43 — Relay Every Cross-Agent Request
+When sub-agent A needs something from sub-agent B, the ORCHESTRATOR ENGINE must log the request, relay it to sub-agent B within the same turn, and deliver B's response back to A within the same turn it receives it. No sub-agent should wait more than one verification cycle for information.
+
+**Violation:** An unanswered request persisting more than one cycle is a protocol error.
+
+### R44 — Auto-Resolve Conflicts Using Project Rules
+When two sub-agents disagree, the ORCHESTRATOR ENGINE must attempt resolution in order: project rules → past decisions → guidelines → conventions (R26 naming, API consistency) → framework defaults. Only escalate to the user if none of the above resolve it AND the decision has real consequences (breaking change, cost, security tradeoff).
+
+**Violation:** Escalating a conflict that could have been resolved by an existing rule wastes the user's time.
+
+### R45 — Max 3 Verification Cycles Before Escalating
+The autonomous completion loop runs a maximum of 3 verification cycles. If the same sub-task fails the same check 3 times in a row within any cycle, escalate immediately (mid-cycle). If after 3 cycles any check still fails, stop and escalate to the user. Never loop indefinitely.
+
+**Violation:** The BRAIN detects more than 3 verification cycles and forces escalation.
