@@ -232,6 +232,28 @@ Then give it a task:
 
 For a **complete reference of all 37 skills** across Backend, Frontend, DevOps, and Shared domains — see [SKILLS.md](SKILLS.md).
 
+### What's New in v1.5.2 — Frontend Rules System
+
+**11 frontend engineering rule files** — senior-level standards for building production frontends:
+
+| Rule file | Covers |
+|-----------|--------|
+| `COMPONENT_ARCHITECTURE` | Single responsibility, props design, smart/presentational, error boundaries |
+| `STATE_MANAGEMENT` | State ownership ladder, context optimization, URL-first, `useEffect` hygiene |
+| `PERFORMANCE` | Core Web Vitals, bundle budgets, image optimization, lazy loading |
+| `ACCESSIBILITY` | WCAG 2.2 AA, semantic HTML, keyboard nav, screen readers, reduced motion |
+| `STYLING` | Token system, mobile-first, dark mode, flat specificity |
+| `ERROR_LOADING_UX` | Four States Contract — loading, error, empty, success |
+| `API_INTEGRATION` | Cache layer, typed client, optimistic updates, request deduplication |
+| `TESTING` | Testing trophy, RTL queries, MSW, what to test |
+| `SECURITY` | XSS, CSP, token storage, SRI, dependency audit |
+| `FORMS_AND_INPUT` | Validation, autocomplete, confirmation patterns, keyboard support |
+| `BUILD_TOOLING` | CI pipeline, TypeScript strict, code splitting, pre-commit hooks |
+
+Plus: [Mantine UI skill](.brain/frontend/skills/mantine.md) (100+ component reference) and a team-readable [Best Practices Guide](.brain/frontend/FRONTEND_BEST_PRACTICES.md).
+
+The Brain auto-loads the relevant rule files based on what your task touches — component work loads architecture rules, API work loads integration rules, etc.
+
 ---
 
 ## Project Memory — Domain Isolated
@@ -254,6 +276,10 @@ Every decision, lesson, test result, and task is saved to `.brain/` — a **team
 │   └── connections/         ← DB schema (gitignored)
 │
 ├── frontend/      ← Frontend domain (isolated)
+│   ├── skills/              ← 7 skills (Mantine, UI eng, design, animations)
+│   ├── rules/               ← 11 frontend engineering rules
+│   ├── reference/           ← Mantine UI integration guide
+│   └── FRONTEND_BEST_PRACTICES.md ← Team-readable guide
 ├── mobile-ios/    ← iOS domain (isolated)
 ├── mobile-android/← Android domain (isolated)
 └── devops/        ← DevOps domain (isolated)
@@ -492,6 +518,7 @@ Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (i
 | v1.4 | **Orchestration Engine** — task decomposition, parallel dispatch, verify loop | ✅ Done |
 | v1.5 | **Skill Library Import** — 34 skills from 6 external repos, 4 rule merges | ✅ Done |
 | v1.5.1 | **Path separator fix** — `.brain.` → `.brain/` in setup.sh & update.sh download paths | ✅ Done |
+| v1.5.2 | **Frontend Rules System** — 11 engineering rules, Mantine reference, human-readable guide | ✅ Done |
 
 ---
 
@@ -503,7 +530,7 @@ Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (i
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>RAI-Engineering — v1.5.1</small>
+    <small>RAI-Engineering — v1.5.2</small>
   </sub>
   <br>
 </div>

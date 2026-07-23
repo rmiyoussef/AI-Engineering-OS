@@ -1,7 +1,7 @@
 # RAI-Engineering — CLAUDE.md
 
 > **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
-> **Version:** v1.5.1 — Path separator fix in install scripts
+> **Version:** v1.5.2 — Frontend Rules System (11 rules + Mantine + human guide)
 
 ============================================================
 ## SYSTEM IDENTITY
@@ -607,7 +607,7 @@ Read `.brain/brain/MEMORY_SYSTEM.md` for full protocol.
 ## VERSION
 ============================================================
 
-RAI-Engineering v1.5.1 — Path separator fix in install scripts
+RAI-Engineering v1.5.2 — Frontend Rules System (11 rules + Mantine + human guide)
 17 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
            BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE,
            GITHUB, GITHUB TASKS, SUMMARY, ORCHESTRATOR, ORCHESTRATOR ENGINE
