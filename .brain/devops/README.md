@@ -1,13 +1,13 @@
 # DevOps / System Management Domain
 
 > Domain-isolated knowledge base for DevOps and system management projects.
-> Plans, rules, skills, and memory live in `.brain/devops/{project-name}/`.
+> Plans, rules, skills, and memory live directly in `.brain/devops/` — no nesting.
 > Skills: 1 (CI/CD automation)
 
 ## Structure
 
 ```
-devops/{project-name}/
+devops/
 ├── plans/       ← Project plans (coming soon)
 ├── rules/       ← Tool-specific rules (coming soon)
 ├── skills/      ← Code templates & patterns (1 skill — CI/CD automation)

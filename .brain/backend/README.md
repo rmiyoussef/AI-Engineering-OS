@@ -1,15 +1,15 @@
 # Backend Domain
 
 > Domain-isolated knowledge base for Backend projects.
-> Plans, rules, skills, and memory live in `.brain/backend/{project-name}/`.
+> Plans, rules, skills, and memory live directly in `.brain/backend/` — no nesting.
 
 ## Structure
 
 ```
-backend/{project-name}/
-├── plans/       ← Project plans for this domain
+backend/
+├── plans/       ← Project plans
 ├── rules/       ← Framework-specific rules (e.g. laravel-rules.md, express-rules.md)
-├── skills/      ← Code templates for this domain
+├── skills/      ← Code templates & patterns (service, controller, resource, crud)
 └── memory/      ← Project knowledge (guidelines, decisions, lessons, etc.)
 ```
 

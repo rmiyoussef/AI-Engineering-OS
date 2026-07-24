@@ -1,15 +1,15 @@
 # Mobile Android Domain
 
 > Domain-isolated knowledge base for Android (Kotlin/Jetpack Compose) projects.
-> Plans, rules, skills, and memory live in `.brain/mobile-android/{project-name}/`.
+> Plans, rules, skills, and memory live directly in `.brain/mobile-android/` — no nesting.
 
 ## Structure
 
 ```
-mobile-android/{project-name}/
-├── plans/       ← Project plans for this domain
+mobile-android/
+├── plans/       ← Project plans (coming soon)
 ├── rules/       ← Framework-specific rules (e.g. compose-rules.md)
-├── skills/      ← Code templates for this domain
+├── skills/      ← Code templates (coming soon)
 └── memory/      ← Project knowledge (guidelines, decisions, lessons, etc.)
 ```
 
