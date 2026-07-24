@@ -229,6 +229,8 @@ Then give it a task:
 - *"Review the code quality of the auth system"*
 - *"Generate tests for the OrderService"*
 - *"Create a new API endpoint for user profiles"*
+- *"Build a search component with debounce, loading states, and error handling"*
+- *"Review the accessibility of the checkout form"*
 
 For a **complete reference of all 37 skills** across Backend, Frontend, DevOps, and Shared domains — see [SKILLS.md](SKILLS.md).
 
@@ -267,6 +269,7 @@ Every decision, lesson, test result, and task is saved to `.brain/` — a **team
 ├── agents/                  ← Agent definitions (ARCHITECT, PLANNER, etc.)
 ├── brain/                   ← Core system files (MISSION, PRINCIPLES, RULES, SYSTEM)
 ├── templates/               ← Summary & testing templates
+├── shared/skills/           ← Cross-domain skills (27 from 6 repos)
 │
 ├── backend/       ← Backend domain
 │   ├── memory/              ← guidelines, decisions, lessons, sessions, tests, tasks
@@ -276,10 +279,13 @@ Every decision, lesson, test result, and task is saved to `.brain/` — a **team
 │   └── connections/         ← DB schema (gitignored)
 │
 ├── frontend/      ← Frontend domain (isolated)
-│   ├── skills/              ← 7 skills (Mantine, UI eng, design, animations)
-│   ├── rules/               ← 11 frontend engineering rules
-│   ├── reference/           ← Mantine UI integration guide
-│   └── FRONTEND_BEST_PRACTICES.md ← Team-readable guide
+│   ├── INDEX.md              ← Frontend index
+│   ├── FRONTEND_BEST_PRACTICES.md ← Human-readable guide
+│   ├── skills/               ← 7 skills (Mantine, UI eng, design, animations)
+│   ├── rules/                ← 11 engineering rules
+│   ├── reference/            ← Mantine UI integration guide
+│   └── memory/               ← Decisions, lessons, tests, tasks
+│
 ├── mobile-ios/    ← iOS domain (isolated)
 ├── mobile-android/← Android domain (isolated)
 └── devops/        ← DevOps domain (isolated)
@@ -295,16 +301,33 @@ The Brain reads this before every session so nothing is forgotten.
 
 When installed, your project gets access to domain-isolated engineering rules:
 
-| Rule File (Domain) | Covers |
-|-----------|--------|
-| `.brain/backend/rules/COMMIT_MESSAGES.md` | Conventional commit format, types, scopes |
-| `.brain/backend/rules/ERROR_HANDLING.md` | Exceptions, logging, fail-fast, HTTP codes |
-| `.brain/backend/rules/NAMING_CONVENTIONS.md` | Classes, methods, variables, tests naming |
-| `.brain/backend/rules/SECURITY.md` | Input validation, SQL injection, XSS, CSRF, auth |
-| `.brain/backend/rules/DATABASE.md` | Migrations, indexing, N+1, pagination, constraints |
-| `.brain/backend/rules/API_DESIGN.md` | RESTful URLs, consistent responses, versioning |
+**Backend (7 rules):**
 
-| `.brain/backend/rules/TESTING_RULES.md` | Writing tests — coverage, scenarios, templates |
+| Rule File | Covers |
+|-----------|--------|
+| `backend/rules/COMMIT_MESSAGES.md` | Conventional commit format, types, scopes |
+| `backend/rules/ERROR_HANDLING.md` | Exceptions, logging, fail-fast, HTTP codes |
+| `backend/rules/NAMING_CONVENTIONS.md` | Classes, methods, variables, tests naming |
+| `backend/rules/SECURITY.md` | Input validation, SQL injection, XSS, CSRF, auth |
+| `backend/rules/DATABASE.md` | Migrations, indexing, N+1, pagination, constraints |
+| `backend/rules/API_DESIGN.md` | RESTful URLs, consistent responses, versioning |
+| `backend/rules/TESTING_RULES.md` | Writing tests — coverage, scenarios, templates |
+
+**Frontend (11 rules):**
+
+| Rule File | Covers |
+|-----------|--------|
+| `frontend/rules/COMPONENT_ARCHITECTURE.md` | Single responsibility, props design, smart/presentational, error boundaries |
+| `frontend/rules/STATE_MANAGEMENT.md` | State ownership, context optimization, `useEffect` hygiene |
+| `frontend/rules/PERFORMANCE.md` | Core Web Vitals, bundle budgets, image optimization |
+| `frontend/rules/ACCESSIBILITY.md` | WCAG 2.2 AA, semantic HTML, keyboard nav, screen readers |
+| `frontend/rules/STYLING.md` | Token system, mobile-first, dark mode, flat specificity |
+| `frontend/rules/ERROR_LOADING_UX.md` | Four States Contract — loading, error, empty, success |
+| `frontend/rules/API_INTEGRATION.md` | Cache layer, typed client, optimistic updates |
+| `frontend/rules/TESTING.md` | Testing trophy, RTL queries, MSW, what to test |
+| `frontend/rules/SECURITY.md` | XSS, CSP, token storage, dependency audit |
+| `frontend/rules/FORMS_AND_INPUT.md` | Validation, autocomplete, confirmation patterns |
+| `frontend/rules/BUILD_TOOLING.md` | CI pipeline, TypeScript strict, pre-commit hooks |
 
 | Template | When Used |
 |----------|-----------|
@@ -328,6 +351,7 @@ Rules are loaded automatically based on what domain the task touches.
 | `skills/GIT.md` | Committing, branching, PRs (framework-agnostic) |
 | `skills/MEMORY.md` | Writing to project memory (framework-agnostic) |
 | `skills/BACKEND_ENGINEERING.md` | Backend QA audit or query work |
+| `frontend/skills/mantine.md` | Mantine UI component reference, form patterns, theming |
 
 ---
 

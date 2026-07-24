@@ -10,8 +10,10 @@
 ```
 frontend/{project-name}/
 ├── plans/       ← Project plans for this domain
-├── rules/       ← Framework-specific rules (e.g. react-rules.md, vue-rules.md)
-├── skills/      ← Code templates for this domain
+├── rules/       ← 11 frontend engineering rules (component, state, perf, a11y, etc.)
+├── skills/      ← Code templates & patterns (Mantine, UI eng, design, animations)
+├── reference/   ← External docs (Mantine UI integration guide)
+├── FRONTEND_BEST_PRACTICES.md ← Team-readable guide
 └── memory/      ← Project knowledge (guidelines, decisions, lessons, etc.)
 ```
 

@@ -10,25 +10,31 @@ Knowledge is organized into **domain-isolated subtrees**. Each domain is self-co
 ```
 .brain/
 ├── INDEX.md                   ← Master index — start here
+├── README.md                  ← You are here
 ├── agents/                    ← Agent definitions (framework-agnostic)
-├── brain/                     ← Core OS files (MISSION, PRINCIPLES, RULES, SYSTEM)
+├── brain/                     ← Core system files (MISSION, PRINCIPLES, RULES, SYSTEM)
 ├── templates/                 ← Summary & testing templates
+├── shared/skills/             ← Cross-domain skills (27 skills from 6 repos)
 │
-├── backend/{project-name}/    ← Backend domain
+├── backend/                   ← Backend domain
+│   ├── memory/                ← guidelines, decisions, lessons, sessions, tests, tasks
+│   ├── skills/                ← Code templates (service, controller, resource, crud)
+│   ├── rules/                 ← Project conventions (8 rule files)
 │   ├── plans/                 ← Project plans
-│   ├── rules/                 ← Framework-specific rules
-│   ├── skills/                ← Code templates & patterns
-│   └── memory/                ← Project knowledge
+│   └── connections/           ← DB schema (gitignored)
 │
-├── frontend/{project-name}/   ← Frontend domain
-│   ├── plans/
-│   ├── rules/
-│   ├── skills/
-│   └── memory/
+├── frontend/                  ← Frontend domain
+│   ├── INDEX.md               ← Frontend index
+│   ├── FRONTEND_BEST_PRACTICES.md ← Human-readable guide
+│   ├── skills/                ← 7 skills (Mantine, UI eng, design, animations)
+│   ├── rules/                 ← 11 frontend engineering rules
+│   ├── reference/             ← Mantine UI integration guide
+│   └── memory/                ← Decisions, lessons, tests, tasks
 │
-├── mobile-ios/{project-name}/ ← iOS domain
-├── mobile-android/{project-name}/ ← Android domain
-└── devops/{project-name}/     ← DevOps domain
+├── mobile-ios/                ← iOS domain (for future projects)
+├── mobile-android/            ← Android domain (for future projects)
+└── devops/                    ← DevOps domain
+    └── skills/                ← DevOps patterns
 ```
 
 ## What's Inside Each Domain
@@ -41,8 +47,9 @@ Knowledge is organized into **domain-isolated subtrees**. Each domain is self-co
 | `{domain}/memory/tasks/` | What work was done and how |
 | `{domain}/memory/tests/` | Test results per feature |
 | `{domain}/skills/` | How to write code in this project |
-| `{domain}/rules/` | Project-specific conventions |
+| `{domain}/rules/` | Project-specific conventions (8-11 files per domain) |
 | `{domain}/plans/` | Active and past plans |
+| `{domain}/reference/` | External reference docs (Mantine, etc.) |
 
 ## For AI Tools
 
@@ -52,7 +59,8 @@ When you start working on this project:
 2. **Read** `.brain/INDEX.md` — full map
 3. **Read** `.brain/{domain}/memory/guidelines.md` — architecture & conventions
 4. **Check** `.brain/{domain}/skills/` — code patterns
-5. **Check** `.brain/{domain}/plans/` — active plans
+5. **Check** `.brain/{domain}/rules/` — engineering rules
+6. **Check** `.brain/{domain}/plans/` — active plans
 
 ## For Humans
 
