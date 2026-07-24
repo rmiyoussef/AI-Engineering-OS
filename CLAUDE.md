@@ -2,6 +2,9 @@
 
 > **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
 > **Version:** v1.5.3 — DevOps Rules System (13 rules + handbook)
+> **Communication Mode:** CAVEMAN ULTRA (AGENTS.md) — default for all responses
+
+
 
 ============================================================
 ## SYSTEM IDENTITY
