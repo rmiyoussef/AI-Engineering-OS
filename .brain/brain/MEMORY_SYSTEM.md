@@ -15,7 +15,7 @@ Knowledge is organized into **domain-isolated subtrees**. Each domain is self-co
 .brain/
 ├── INDEX.md                         ← Master index (auto-maintained)
 ├── agents/                          ← Agent definitions (framework-agnostic)
-├── brain/                           ← Core OS files (MISSION, PRINCIPLES, RULES, SYSTEM)
+├── brain/                           ← Core system files (MISSION, PRINCIPLES, RULES, SYSTEM)
 ├── templates/                       ← Summary & testing templates
 ├── session-bus/                     ← Inter-session message bus ⚠️ GITIGNORED
 │   ├── inbox/{uuid}/                ← Incoming messages

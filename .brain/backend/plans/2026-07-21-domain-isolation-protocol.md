@@ -31,7 +31,7 @@ Currently all project knowledge lives flat under `.brain/memory/`, `.brain/rules
 ```
 .brain/
 ├── agents/                           ← Agent definitions — UNCHANGED
-├── brain/                            ← Core OS files — UNCHANGED
+├── brain/                            ← Core system files — UNCHANGED
 ├── templates/                        ← Summary & testing templates — UNCHANGED  
 ├── session-bus/                      ← Inter-session message bus — UNCHANGED
 ├── sessions/                         ← Session registry — UNCHANGED

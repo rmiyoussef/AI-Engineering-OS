@@ -15,7 +15,7 @@ RAI-Engineering organizes knowledge into **domain-isolated subtrees**.
 ├── INDEX.md                              ← You are here
 ├── README.md                             ← What this folder is
 ├── agents/                               ← Agent definitions (framework-agnostic)
-├── brain/                                ← Core OS files
+├── brain/                                ← Core system files
 ├── templates/                            ← Summary & testing templates
 ├── shared/skills/                        ← Cross-domain skills (27 skills from 6 repos)
 ├── session-bus/                          ← Inter-session message bus (gitignored)
